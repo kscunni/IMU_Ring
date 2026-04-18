@@ -53,3 +53,26 @@ dkms.conf
 
 # debug information files
 *.dwo
+
+# TI Generated/Build Folders
+Debug/
+Release/
+GeneratedSource/
+.config/
+.xdchelp/
+
+# Logs
+*.log
+
+# VS Code / CCS Theia specific
+.vscode/
+.theia/
+
+# Eclipse / CCS Metadata
+.settings/
+.project
+.cproject
+.launches/
+*.prefs
+
+.clangd
