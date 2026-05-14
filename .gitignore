@@ -70,9 +70,9 @@ GeneratedSource/
 
 # Eclipse / CCS Metadata
 .settings/
-.project
-.cproject
-.launches/
+# .project
+# .cproject
+  .launches/
 *.prefs
 
 .clangd
