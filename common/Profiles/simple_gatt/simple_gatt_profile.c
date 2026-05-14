@@ -53,7 +53,7 @@
 /* This Header file contains all BLE API and icall structure definition */
 #include "ti/ble/stack_util/icall/app/icall_ble_api.h"
 
-#include <ti/ble/profiles/simple_gatt/simple_gatt_profile.h>
+#include "common/Profiles/simple_gatt/simple_gatt_profile.h"
 #include "ti/ble/app_util/framework/bleapputil_api.h"
 
 /*********************************************************************
