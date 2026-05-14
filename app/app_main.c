@@ -251,4 +251,5 @@ void appMain(void)
                     &appMainParams, &appMainPeriCentParams);
 
     create_SPI_task();
+    create_test_task();
 }

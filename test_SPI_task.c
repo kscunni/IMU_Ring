@@ -185,7 +185,7 @@ void init_icm45605(void) {
 
 
 // Task Configuration 
-#define TASK_STACK_SIZE 2048 
+#define TASK_STACK_SIZE 512 
 #define TASK_PRIORITY   1   
 static TaskHandle_t SPI_task_handle = NULL;
 

@@ -13,7 +13,7 @@
 
 
 // Task Configuration 
-#define TASK_STACK_SIZE 1024 
+#define TASK_STACK_SIZE 256 
 #define TASK_PRIORITY   1   
 static TaskHandle_t test_task_handle = NULL;
 
