@@ -104,7 +104,7 @@
                         </toolChain>
                     </folderInfo>
                     <sourceEntries>
-                        <entry excluding="ICMDriver" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+                        <entry excluding="ICMDriver/icm45605|ICMDriver/examples" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
                     </sourceEntries>
                 </configuration>
             </storageModule>
