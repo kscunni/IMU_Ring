@@ -109,6 +109,11 @@
 			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/controller/hci/hci_supported_cmd.h</locationURI>
 		</link>
 		<link>
+			<name>common/iCall/icall.c</name>
+			<type>1</type>
+			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/stack_util/icall/app/src/icall.c</locationURI>
+		</link>
+		<link>
 			<name>common/iCall/icall.h</name>
 			<type>1</type>
 			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/stack_util/icall/app/icall.h</locationURI>
@@ -122,11 +127,6 @@
 			<name>common/iCall/icall_addrs.h</name>
 			<type>1</type>
 			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/stack_util/icall/app/icall_addrs.h</locationURI>
-		</link>
-		<link>
-			<name>common/iCall/icall_cc23x0.c</name>
-			<type>1</type>
-			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/stack_util/icall/app/src/icall_cc23x0.c</locationURI>
 		</link>
 		<link>
 			<name>common/iCall/icall_platform.h</name>
