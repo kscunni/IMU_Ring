@@ -5,7 +5,7 @@
 #include "ti/ble/stack_util/icall/app/icall.h"
 #include "ti/ble/stack_util/icall/app/icall_ble_api.h"
 #include "ti/ble/profiles/simple_gatt/simple_gatt_profile.h"
-#include "test_ble_task.h"
+// #include "test_ble_task.h"
 #include "ti_ble_config.h"
 #include "ti/ble/app_util/framework/bleapputil_api.h"
 #include "ti/ble/app_util/menu/menu_module.h"

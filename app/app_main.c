@@ -51,7 +51,7 @@ Target Device: cc23xx
 #include "ti/ble/app_util/framework/bleapputil_api.h"
 #include "ti/ble/app_util/menu/menu_module.h"
 #include <app_main.h>
-#include "test_ble_task.h"
+#include "tasks.h"
 //*****************************************************************************
 //! Defines
 //*****************************************************************************
@@ -250,6 +250,7 @@ void appMain(void)
     BLEAppUtil_init(&criticalErrorHandler, &App_StackInitDoneHandler,
                     &appMainParams, &appMainPeriCentParams);
 
-    create_SPI_task();
-    create_test_task();
+    // create_SPI_task();
+    // create_test_task();
+    create_imuble_task();
 }

@@ -26,6 +26,7 @@ const GPIO       = scripting.addModule("/ti/drivers/GPIO");
 const GPIO1      = GPIO.addInstance();
 const GPIO2      = GPIO.addInstance();
 const GPIO3      = GPIO.addInstance();
+const GPIO10     = GPIO.addInstance();
 const NVS        = scripting.addModule("/ti/drivers/NVS");
 const NVS1       = NVS.addInstance();
 const Power      = scripting.addModule("/ti/drivers/Power");
@@ -92,6 +93,10 @@ GPIO3.$name              = "CONFIG_GPIO_0";
 GPIO3.mode               = "Output";
 GPIO3.initialOutputState = "High";
 GPIO3.gpioPin.$assign    = "boosterpack.10";
+
+GPIO10.interruptTrigger = "Rising Edge";
+GPIO10.$name            = "CONFIG_GPIO_INT1";
+GPIO10.gpioPin.$assign  = "boosterpack.25";
 
 NVS1.$name                    = "CONFIG_NVSINTERNAL";
 NVS1.internalFlash.$name      = "ti_drivers_nvs_NVSLPF30";
