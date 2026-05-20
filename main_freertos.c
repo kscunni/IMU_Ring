@@ -68,6 +68,10 @@
 icall_userCfg_t user0Cfg = BLE_USER_CFG;
 #endif // USE_DEFAULT_USER_CFG
 
+#ifdef MS_OAD
+#include "ti/ble/profiles/oad/ms_oad_profile.h"
+#endif
+
 
 /*******************************************************************************
  * MACROS
@@ -123,7 +127,16 @@ int main()
   user0Cfg.appServiceInfo->timerMaxMillisecond  = ICall_getMaxMSecs();
 
   /* Initialize all applications tasks */
+#if defined(MS_OAD)
+  if (MSOAD_InitIfRequired() == false)
+  {
+#ifndef MS_OAD_HALF_MODE_BUILD
+    appMain();
+#endif
+  }
+#else // !defined(MS_OAD)
   appMain();
+#endif
 
   /* Start the FreeRTOS scheduler */
   vTaskStartScheduler();

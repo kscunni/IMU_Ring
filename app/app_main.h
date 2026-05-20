@@ -179,6 +179,32 @@ bStatus_t Connection_start(void);
 bStatus_t Pairing_start(void);
 
 /*********************************************************************
+ * @fn      MsOadPeripheral_start
+ *
+ * @brief   This function is called after stack initialization when
+ *          Multi-Step OAD profile has been enabled.
+ *          the purpose of this function is to initialize and
+ *          register the specific events handlers of the peripheral
+ *          application module for Multi-Step OAD.
+ *
+ * @return  SUCCESS, errorInfo
+ */
+bStatus_t MsOadPeripheral_start(void);
+
+/*********************************************************************
+ * @fn      MsOadPairing_start
+ *
+ * @brief   This function is called after stack initialization when
+ *          Multi-Step OAD profile has been enabled.
+ *          the purpose of this function is to initialize and
+ *          register the specific events handlers of the pairing
+ *          application module for Multi-Step OAD.
+ *
+ * @return  SUCCESS, errorInfo
+ */
+bStatus_t MsOadPairing_start(void);
+
+/*********************************************************************
  * @fn      Data_start
  *
  * @brief   This function is called after stack initialization,

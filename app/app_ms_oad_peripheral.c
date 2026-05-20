@@ -1,9 +1,13 @@
 /******************************************************************************
 
-@file  app_peripheral.c
+@file  app_ms_oad_peripheral.c
 
-@brief This example file demonstrates how to activate the peripheral role with
-the help of BLEAppUtil APIs.
+@brief This file demonstrates how to activate the peripheral role with
+the help of BLEAppUtil APIs for Multi-Step OAD applications.
+
+This is a simplified version of app_peripheral.c without menu/printing
+functionality, designed for OAD operations where minimal code footprint
+is desired.
 
 Two structures are used for event handling, one for connection events and one
 for advertising events.
@@ -16,11 +20,9 @@ In the events handler functions, write what actions are done after each event.
 In this example, after a connection is made, activation is performed for
 re-advertising up to the maximum connections.
 
-In the Peripheral_start() function at the bottom of the file, registration,
+In the MsOadPeripheral_start() function at the bottom of the file, registration,
 initialization and activation are done using the BLEAppUtil API functions,
 using the structures defined in the file.
-
-More details on the functions and structures can be seen next to the usage.
 
 Group: WCS, BTS
 Target Device: cc23xx
@@ -62,73 +64,51 @@ Target Device: cc23xx
 
 *****************************************************************************/
 
-#if defined( HOST_CONFIG ) && ( HOST_CONFIG & ( PERIPHERAL_CFG ) )
+#ifdef MS_OAD
 
 //*****************************************************************************
 //! Includes
 //*****************************************************************************
 #include "ti_ble_config.h"
 #include "ti/ble/app_util/framework/bleapputil_api.h"
-#include "ti/ble/app_util/menu/menu_module.h"
 #include <app_main.h>
 
 //*****************************************************************************
 //! Prototypes
 //*****************************************************************************
-void Peripheral_AdvEventHandler(uint32 event, BLEAppUtil_msgHdr_t *pMsgData);
-void Peripheral_GAPConnEventHandler(uint32 event, BLEAppUtil_msgHdr_t *pMsgData);
+void MsOadPeripheral_AdvEventHandler(uint32 event, BLEAppUtil_msgHdr_t *pMsgData);
+void MsOadPeripheral_GAPConnEventHandler(uint32 event, BLEAppUtil_msgHdr_t *pMsgData);
 
 //*****************************************************************************
 //! Globals
 //*****************************************************************************
 
-BLEAppUtil_EventHandler_t peripheralConnHandler =
+BLEAppUtil_EventHandler_t msOadPeripheralConnHandler =
 {
     .handlerType    = BLEAPPUTIL_GAP_CONN_TYPE,
-    .pEventHandler  = Peripheral_GAPConnEventHandler,
+    .pEventHandler  = MsOadPeripheral_GAPConnEventHandler,
     .eventMask      = BLEAPPUTIL_LINK_ESTABLISHED_EVENT |
                       BLEAPPUTIL_LINK_PARAM_UPDATE_REQ_EVENT |
                       BLEAPPUTIL_LINK_TERMINATED_EVENT,
 };
 
-BLEAppUtil_EventHandler_t peripheralAdvHandler =
+BLEAppUtil_EventHandler_t msOadPeripheralAdvHandler =
 {
     .handlerType    = BLEAPPUTIL_GAP_ADV_TYPE,
-    .pEventHandler  = Peripheral_AdvEventHandler,
+    .pEventHandler  = MsOadPeripheral_AdvEventHandler,
     .eventMask      = BLEAPPUTIL_ADV_START_AFTER_ENABLE |
                       BLEAPPUTIL_ADV_END_AFTER_DISABLE
 };
 
 //! Stores adv handles
-uint8_t peripheralAdvHandles[BLE_CONFIG_NUM_ADV_SETS];
+uint8_t msOadPeripheralAdvHandles[BLE_CONFIG_NUM_ADV_SETS];
 
 //*****************************************************************************
 //! Functions
 //*****************************************************************************
 
-
-static void requestConnParamUpdate(uint16_t connHandle)
-{
-    gapUpdateLinkParamReq_t req =
-    {
-        .connectionHandle = connHandle,
-
-        // 24 * 1.25ms = 30ms
-        .intervalMin = 24,
-        .intervalMax = 24,
-
-        .connLatency = 0,
-
-        // 500 * 10ms = 5s supervision timeout
-        .connTimeout = 500
-    };
-
-    GAP_UpdateLinkParamReq(&req);
-}
-
-
 /*********************************************************************
- * @fn      Peripheral_AdvEventHandler
+ * @fn      MsOadPeripheral_AdvEventHandler
  *
  * @brief   The purpose of this function is to handle advertise events
  *          that rise from the GAP and were registered in
@@ -139,23 +119,19 @@ static void requestConnParamUpdate(uint16_t connHandle)
  *
  * @return  none
  */
-void Peripheral_AdvEventHandler(uint32 event, BLEAppUtil_msgHdr_t *pMsgData)
+void MsOadPeripheral_AdvEventHandler(uint32 event, BLEAppUtil_msgHdr_t *pMsgData)
 {
     switch(event)
     {
         case BLEAPPUTIL_ADV_START_AFTER_ENABLE:
         {
-            MenuModule_printf(APP_MENU_ADV_EVENT, 0, "Adv status: Started - handle: "
-                              MENU_MODULE_COLOR_YELLOW "%d" MENU_MODULE_COLOR_RESET,
-                              ((BLEAppUtil_AdvEventData_t *)pMsgData)->pBuf->advHandle);
+            // Advertising started - no action needed for MS-OAD
             break;
         }
 
         case BLEAPPUTIL_ADV_END_AFTER_DISABLE:
         {
-            MenuModule_printf(APP_MENU_ADV_EVENT, 0, "Adv status: Ended - handle: "
-                              MENU_MODULE_COLOR_YELLOW "%d" MENU_MODULE_COLOR_RESET,
-                              ((BLEAppUtil_AdvEventData_t *)pMsgData)->pBuf->advHandle);
+            // Advertising ended - no action needed for MS-OAD
             break;
         }
 
@@ -167,7 +143,7 @@ void Peripheral_AdvEventHandler(uint32 event, BLEAppUtil_msgHdr_t *pMsgData)
 }
 
 /*********************************************************************
- * @fn      Peripheral_GAPConnEventHandler
+ * @fn      MsOadPeripheral_GAPConnEventHandler
  *
  * @brief   The purpose of this function is to handle connection related
  *          events that rise from the GAP and were registered in
@@ -178,7 +154,7 @@ void Peripheral_AdvEventHandler(uint32 event, BLEAppUtil_msgHdr_t *pMsgData)
  *
  * @return  none
  */
-void Peripheral_GAPConnEventHandler(uint32 event, BLEAppUtil_msgHdr_t *pMsgData)
+void MsOadPeripheral_GAPConnEventHandler(uint32 event, BLEAppUtil_msgHdr_t *pMsgData)
 {
     switch(event)
     {
@@ -188,19 +164,27 @@ void Peripheral_GAPConnEventHandler(uint32 event, BLEAppUtil_msgHdr_t *pMsgData)
             if(linkDB_NumActive() < linkDB_NumConns())
             {
                 /* Start advertising since there is room for more connections */
-                BleConfig_startAdvSets(peripheralAdvHandles, NULL, BLE_CONFIG_NUM_ADV_SETS);
+                BleConfig_startAdvSets(msOadPeripheralAdvHandles, NULL, BLE_CONFIG_NUM_ADV_SETS);
             }
             else
             {
                 /* Stop advertising since there is no room for more connections */
-                BleConfig_stopAdvSets(peripheralAdvHandles, NULL, BLE_CONFIG_NUM_ADV_SETS);
+                BleConfig_stopAdvSets(msOadPeripheralAdvHandles, NULL, BLE_CONFIG_NUM_ADV_SETS);
             }
             break;
         }
 
         case BLEAPPUTIL_LINK_TERMINATED_EVENT:
         {
-            BleConfig_startAdvSets(peripheralAdvHandles, NULL, BLE_CONFIG_NUM_ADV_SETS);
+            BleConfig_startAdvSets(msOadPeripheralAdvHandles, NULL, BLE_CONFIG_NUM_ADV_SETS);
+            break;
+        }
+
+        case BLEAPPUTIL_LINK_PARAM_UPDATE_REQ_EVENT:
+        {
+            gapUpdateLinkParamReqEvent_t *pReq = (gapUpdateLinkParamReqEvent_t *)pMsgData;
+            // Accept all parameter update requests for OAD
+            BLEAppUtil_paramUpdateRsp(pReq, TRUE);
             break;
         }
 
@@ -212,48 +196,48 @@ void Peripheral_GAPConnEventHandler(uint32 event, BLEAppUtil_msgHdr_t *pMsgData)
 }
 
 /*********************************************************************
- * @fn      Peripheral_start
+ * @fn      MsOadPeripheral_start
  *
  * @brief   This function is called after stack initialization,
  *          the purpose of this function is to initialize and
  *          register the specific events handlers of the peripheral
- *          application module
+ *          application module for Multi-Step OAD
  *
  * @return  SUCCESS, errorInfo
  */
-bStatus_t Peripheral_start()
+bStatus_t MsOadPeripheral_start(void)
 {
     bStatus_t status = SUCCESS;
 
-    status = BLEAppUtil_registerEventHandler(&peripheralConnHandler);
+    status = BLEAppUtil_registerEventHandler(&msOadPeripheralConnHandler);
     if(status != SUCCESS)
     {
         // Return status value
         return(status);
     }
 
-    status = BLEAppUtil_registerEventHandler(&peripheralAdvHandler);
+    status = BLEAppUtil_registerEventHandler(&msOadPeripheralAdvHandler);
     if(status != SUCCESS)
     {
         return(status);
     }
 
     // Initiate the advertise sets
-    uint8_t peripheralAdvHandlesStatuses[BLE_CONFIG_NUM_ADV_SETS];
-    BleConfig_initAdvSets(peripheralAdvHandles, peripheralAdvHandlesStatuses);
+    uint8_t msOadPeripheralAdvHandlesStatuses[BLE_CONFIG_NUM_ADV_SETS];
+    BleConfig_initAdvSets(msOadPeripheralAdvHandles, msOadPeripheralAdvHandlesStatuses);
     for (int i = 0; i < BLE_CONFIG_NUM_ADV_SETS; i++)
     {
         // Return the first FAILURE status value
-        if (peripheralAdvHandlesStatuses[i] != SUCCESS)
+        if (msOadPeripheralAdvHandlesStatuses[i] != SUCCESS)
         {
-            return(peripheralAdvHandlesStatuses[i]);
+            return(msOadPeripheralAdvHandlesStatuses[i]);
         }
     }
-    
-    BleConfig_startAdvSets(peripheralAdvHandles, NULL, BLE_CONFIG_NUM_ADV_SETS);
+
+    BleConfig_startAdvSets(msOadPeripheralAdvHandles, NULL, BLE_CONFIG_NUM_ADV_SETS);
 
     // Return status value
     return(status);
 }
 
-#endif // ( HOST_CONFIG & ( PERIPHERAL_CFG ) )
+#endif // MS_OAD

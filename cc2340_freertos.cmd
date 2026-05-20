@@ -55,6 +55,30 @@
 #define NVS_SIZE                ti_utils_build_GenMap_NVS_CONFIG_NVSINTERNAL_SIZE
 #endif
 
+#if defined(ti_utils_build_GenMap_MS_OAD)
+#define MS_OAD                  ti_utils_build_GenMap_MS_OAD
+#endif
+
+#if defined(ti_utils_build_GenMap_OAD_DUAL_IMAGE)
+#define OAD_DUAL_IMAGE          ti_utils_build_GenMap_OAD_DUAL_IMAGE
+#endif
+
+#if defined(ti_utils_build_GenMap_OAD_PERSISTENT)
+#define OAD_PERSISTENT          ti_utils_build_GenMap_OAD_PERSISTENT
+#endif
+
+#if defined(ti_utils_build_GenMap_OAD_APP_ONCHIP)
+#define OAD_APP_ONCHIP          ti_utils_build_GenMap_OAD_APP_ONCHIP
+#endif
+
+#if defined(ti_utils_build_GenMap_OAD_APP_OFFCHIP)
+#define OAD_APP_OFFCHIP         ti_utils_build_GenMap_OAD_APP_OFFCHIP
+#endif
+
+#if defined(ti_utils_build_GenMap_APP_HDR_ADDR)
+#define APP_HDR_ADDR            ti_utils_build_GenMap_APP_HDR_ADDR
+#endif
+
 #if defined(ti_utils_build_GenMap_FLASH0_BASE) && \
     defined(ti_utils_build_GenMap_FLASH0_SIZE)
 #define FLASH_BASE              ti_utils_build_GenMap_FLASH0_BASE
@@ -111,7 +135,7 @@
 #endif //OAD_APP_OFFCHIP
 
 #ifdef OAD_DUAL_IMAGE
-#define APP_SIZE            ((FLASH_SIZE - MCUBOOT_SIZE)/2 - MCU_HDR_SIZE)
+#define APP_SIZE            ((FLASH_SIZE - APP_HDR_BASE)/2 - MCU_HDR_SIZE)
 #endif //OAD_DUAL_IMAGE
 
 /*******************************************************************************
@@ -122,13 +146,19 @@
 /* CCS: Change stack size under Project Properties    */
 __STACK_TOP = __stack + __STACK_SIZE;
 
+/*******************************************************************************
+ * MS-OAD - Include generated linker file for Multistep OAD
+ * This must be after FLASH_BASE/FLASH_SIZE definitions but before MEMORY block
+ */
+#if defined(MS_OAD)
+#include "ti_ble_oad_linker.inc"
+#endif
 
 /*******************************************************************************
  * System memory map
  */
 MEMORY
 {
-
 #if defined(OAD_APP_OFFCHIP)|| defined(OAD_APP_ONCHIP) || defined(OAD_PERSISTENT) || defined(OAD_DUAL_IMAGE)
 
     MCUBOOT_SLOT(RX)       : origin = MCUBOOT_BASE        ,length = MCUBOOT_SIZE
@@ -156,7 +186,9 @@ MEMORY
     #define TARGET_SLOT APP_SLOT
 #endif //defined(OAD_PERSISTENT)
 
-#else //No OAD
+#endif //defined(OAD_APP_OFFCHIP)|| defined(OAD_APP_ONCHIP) || defined(OAD_PERSISTENT) || defined(OAD_DUAL_IMAGE)
+
+#if !defined(OAD_APP_OFFCHIP) && !defined(OAD_APP_ONCHIP) && !defined(OAD_PERSISTENT) && !defined(OAD_DUAL_IMAGE) && !defined(MS_OAD)
 
     /* Application stored in and executes from internal flash */
     FLASH (RX) : origin = FLASH_BASE, length = FLASH_SIZE
@@ -167,7 +199,7 @@ MEMORY
     #define TARGET_BASE FLASH_BASE
     #define TARGET_SLOT FLASH
 
-#endif //defined(OAD_APP_OFFCHIP)|| defined(OAD_APP_ONCHIP) || defined(OAD_PERSISTENT)
+#endif //!defined(OAD_APP_*) && !defined(MS_OAD)
 
 #if defined(NVS_BASE) && defined(NVS_SIZE)
     NVS_SLOT(RX) : origin = NVS_BASE ,length = NVS_SIZE
@@ -206,9 +238,14 @@ SECTIONS
 {
 #if defined(OAD_APP_OFFCHIP) || defined(OAD_APP_ONCHIP) || defined(OAD_PERSISTENT) || defined(OAD_DUAL_IMAGE)
 	.primary_hdr    :   > APP_HDR_SLOT, type = NOLOAD
-#else
+#endif
+
+#if !defined(OAD_APP_OFFCHIP) && !defined(OAD_APP_ONCHIP) && !defined(OAD_PERSISTENT) && !defined(OAD_DUAL_IMAGE) && !defined(MS_OAD)
     .TI.ramfunc     : {} load=FLASH, run=SRAM, table(BINIT)
 #endif
+
+#if !defined(MS_OAD)
+    /* no MS-OAD, all sections go to the defined target slot */
     .resetVecs      :   > TARGET_BASE
     .text           :   > TARGET_SLOT
     .const          :   > TARGET_SLOT
@@ -219,6 +256,7 @@ SECTIONS
     .pinit          :   > TARGET_SLOT
     .init_array     :   > TARGET_SLOT
     .emb_text       :   > TARGET_SLOT
+#endif //not defined(MS_OAD)
 
 #if defined(CCFG_BASE) && defined(CCFG_SIZE)
     .ccfg           :   > CCFG

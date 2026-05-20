@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>IMU_Ring</name>
+	<name>basic_ble_2</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -89,6 +89,16 @@
 			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/stack_util/lib_opt/rom_init.c</locationURI>
 		</link>
 		<link>
+			<name>common/Util/util.c</name>
+			<type>1</type>
+			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/app_util/common/src/util.c</locationURI>
+		</link>
+		<link>
+			<name>common/Util/util.h</name>
+			<type>1</type>
+			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/app_util/common/util.h</locationURI>
+		</link>
+		<link>
 			<name>common/config/ble_user_config.c</name>
 			<type>1</type>
 			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/app_util/config/src/ble_user_config.c</locationURI>
@@ -109,6 +119,11 @@
 			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/controller/hci/hci_supported_cmd.h</locationURI>
 		</link>
 		<link>
+			<name>common/iCall/icall.c</name>
+			<type>1</type>
+			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/stack_util/icall/app/src/icall.c</locationURI>
+		</link>
+		<link>
 			<name>common/iCall/icall.h</name>
 			<type>1</type>
 			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/stack_util/icall/app/icall.h</locationURI>
@@ -122,11 +137,6 @@
 			<name>common/iCall/icall_addrs.h</name>
 			<type>1</type>
 			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/stack_util/icall/app/icall_addrs.h</locationURI>
-		</link>
-		<link>
-			<name>common/iCall/icall_cc23x0.c</name>
-			<type>1</type>
-			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/stack_util/icall/app/src/icall_cc23x0.c</locationURI>
 		</link>
 		<link>
 			<name>common/iCall/icall_platform.h</name>
@@ -177,6 +187,11 @@
 			<name>common/lib_opt/ctrl_opt_cm.c</name>
 			<type>1</type>
 			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/stack_util/lib_opt/src/ctrl_opt_cm.c</locationURI>
+		</link>
+		<link>
+			<name>common/lib_opt/ctrl_opt_coex.c</name>
+			<type>1</type>
+			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/stack_util/lib_opt/src/ctrl_opt_coex.c</locationURI>
 		</link>
 		<link>
 			<name>common/lib_opt/ctrl_opt_connectable.c</name>
@@ -244,6 +259,11 @@
 			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/stack_util/lib_opt/src/ctrl_opt_past_sender.c</locationURI>
 		</link>
 		<link>
+			<name>common/lib_opt/ctrl_opt_pawr_advertiser.c</name>
+			<type>1</type>
+			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/stack_util/lib_opt/src/ctrl_opt_pawr_advertiser.c</locationURI>
+		</link>
+		<link>
 			<name>common/lib_opt/ctrl_opt_pawr_scan.c</name>
 			<type>1</type>
 			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/stack_util/lib_opt/src/ctrl_opt_pawr_scan.c</locationURI>
@@ -269,6 +289,11 @@
 			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/stack_util/lib_opt/src/ctrl_opt_scanner.c</locationURI>
 		</link>
 		<link>
+			<name>common/lib_opt/ctrl_opt_ts_periodic.c</name>
+			<type>1</type>
+			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/stack_util/lib_opt/src/ctrl_opt_ts_periodic.c</locationURI>
+		</link>
+		<link>
 			<name>common/lib_opt/ctrl_opt_vendor_specific_cmd.c</name>
 			<type>1</type>
 			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/stack_util/lib_opt/src/ctrl_opt_vendor_specific_cmd.c</locationURI>
@@ -277,6 +302,26 @@
 			<name>common/lib_opt/host_opt_gap_bond_mgr.c</name>
 			<type>1</type>
 			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/stack_util/lib_opt/src/host_opt_gap_bond_mgr.c</locationURI>
+		</link>
+		<link>
+			<name>common/lib_opt/host_opt_gap_past_receiver.c</name>
+			<type>1</type>
+			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/stack_util/lib_opt/src/host_opt_gap_past_receiver.c</locationURI>
+		</link>
+		<link>
+			<name>common/lib_opt/host_opt_gap_past_sender.c</name>
+			<type>1</type>
+			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/stack_util/lib_opt/src/host_opt_gap_past_sender.c</locationURI>
+		</link>
+		<link>
+			<name>common/lib_opt/host_opt_gap_pawr_adv.c</name>
+			<type>1</type>
+			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/stack_util/lib_opt/src/host_opt_gap_pawr_adv.c</locationURI>
+		</link>
+		<link>
+			<name>common/lib_opt/host_opt_gap_pawr_scan.c</name>
+			<type>1</type>
+			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/stack_util/lib_opt/src/host_opt_gap_pawr_scan.c</locationURI>
 		</link>
 		<link>
 			<name>common/BLEAppUtil/inc/bleapputil_api.h</name>
@@ -314,6 +359,26 @@
 			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/common/nv/nvocmp.h</locationURI>
 		</link>
 		<link>
+			<name>common/Profiles/oad/ms_oad_profile.c</name>
+			<type>1</type>
+			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/profiles/oad/src/ms_oad_profile.c</locationURI>
+		</link>
+		<link>
+			<name>common/Profiles/oad/ms_oad_profile.h</name>
+			<type>1</type>
+			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/profiles/oad/ms_oad_profile.h</locationURI>
+		</link>
+		<link>
+			<name>common/Profiles/oad/oad_profile.c</name>
+			<type>1</type>
+			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/profiles/oad/src/oad_profile.c</locationURI>
+		</link>
+		<link>
+			<name>common/Profiles/oad/oad_profile.h</name>
+			<type>1</type>
+			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/profiles/oad/oad_profile.h</locationURI>
+		</link>
+		<link>
 			<name>common/Services/dev_info/dev_info_service.c</name>
 			<type>1</type>
 			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/services/dev_info/src/dev_info_service.c</locationURI>
@@ -322,6 +387,46 @@
 			<name>common/Services/dev_info/dev_info_service.h</name>
 			<type>1</type>
 			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/services/dev_info/dev_info_service.h</locationURI>
+		</link>
+		<link>
+			<name>common/Services/oad/oad_reset_service.c</name>
+			<type>1</type>
+			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/services/oad/src/oad_reset_service.c</locationURI>
+		</link>
+		<link>
+			<name>common/Services/oad/oad_reset_service.h</name>
+			<type>1</type>
+			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/services/oad/oad_reset_service.h</locationURI>
+		</link>
+		<link>
+			<name>common/Services/oad/oad_service.c</name>
+			<type>1</type>
+			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/services/oad/src/oad_service.c</locationURI>
+		</link>
+		<link>
+			<name>common/Services/oad/oad_service.h</name>
+			<type>1</type>
+			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/services/oad/oad_service.h</locationURI>
+		</link>
+		<link>
+			<name>common/Util/SwUpdate/flash_interface.h</name>
+			<type>1</type>
+			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/common/cc26xx/flash_interface/flash_interface.h</locationURI>
+		</link>
+		<link>
+			<name>common/Util/SwUpdate/flash_interface_oad.c</name>
+			<type>1</type>
+			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/app_util/sw_update/src/flash_interface_oad.c</locationURI>
+		</link>
+		<link>
+			<name>common/Util/SwUpdate/sw_update.c</name>
+			<type>1</type>
+			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/app_util/sw_update/src/sw_update.c</locationURI>
+		</link>
+		<link>
+			<name>common/Util/SwUpdate/sw_update.h</name>
+			<type>1</type>
+			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/app_util/sw_update/sw_update.h</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

@@ -1,57 +1,94 @@
 import asyncio
+import struct
+import time
 from bleak import BleakScanner, BleakClient
 
 # --- Configuration ---
-# The name your CC2340R5 is broadcasting. 
-# If you didn't change it in SysConfig, it usually defaults to "Basic BLE" or "Project Zero"
-DEVICE_NAME = "BLE Ring" 
-
-# The 128-bit UUID for Characteristic 4 (0xFFF4)
+DEVICE_NAME = "IMU_Ring"
 CHAR_UUID = "0000fff4-0000-1000-8000-00805f9b34fb"
+MAX_SAMPLES = 3000
+OUTPUT_FILENAME = "imu_data.csv"
+
+# Global state tracking
+sample_count = 0
+start_time = None  # Holds the baseline timestamp of the first data point
+stop_event = asyncio.Event()
+file_handle = None
+prev_ms = 0
 
 def notification_handler(sender, data):
-    """This function is called instantly whenever the CC2340R5 sends a notification."""
-    print(f"--- New Packet Received ---")
-    print(f"Length: {len(data)} bytes")
-    
-    # Print the first 16 bytes in HEX format to verify your hardcoded data
-    # hex_data = " ".join(f"{b:02X}" for b in data[:16])
-    # print(f"Data (First 16 bytes): {hex_data} ...\n")
-    print(data.decode())
+    global sample_count, start_time, prev_ms
+   
+    # Ensure we have the full 12-byte payload before unpacking
+    if len(data) == 12:
+        # Unpack 6 signed 16-bit integers (Little Endian)
+        ax, ay, az, gx, gy, gz = struct.unpack('<6h', data)
+       
+        current_time = time.time()
+       
+        # Lock in the start time on the very first packet
+        if start_time is None:
+            start_time = current_time
+           
+        # Calculate milliseconds elapsed since the first data point
+        elapsed_ms = (current_time - start_time) * 1000
+        diff = elapsed_ms - prev_ms
+        prev_ms = elapsed_ms
+       
+        # Write directly to the CSV file (formatted as an integer millisecond)
+        file_handle.write(f"{int(elapsed_ms)},{ax},{ay},{az},{gx},{gy},{gz}\n")
+       
+        sample_count += 1
+       
+        # Provide a terminal update every 100 samples so you know it's alive
+        if sample_count % 100 == 0:
+            print(f"Collected {sample_count}/{MAX_SAMPLES} samples...")
+           
+        # Trigger the main loop to exit once we hit the target
+        if sample_count >= MAX_SAMPLES:
+            stop_event.set()
+    else:
+        print(f"Warning: Received malformed packet of length: {len(data)} bytes")
 
 async def main():
+    global file_handle
     print(f"Scanning for {DEVICE_NAME}...")
-    
+   
     # Scan for the device by its broadcast name
     device = await BleakScanner.find_device_by_name(DEVICE_NAME)
 
     if not device:
-        print(f"\n Could not find '{DEVICE_NAME}'.")
+        print(f"\nCould not find '{DEVICE_NAME}'.")
         print("Make sure the board is powered on, advertising, and not connected to your phone!")
         return
 
-    print(f"\n Found {DEVICE_NAME} ({device.address}). Connecting...")
+    print(f"\nFound {DEVICE_NAME} ({device.address}). Connecting...")
 
-    # Connect to the device
-    async with BleakClient(device) as client:
-        print(" Connected!")
-        
-        # Subscribe to the notifications on Characteristic 4
-        print(f"Subscribing to {CHAR_UUID}...")
-        await client.start_notify(CHAR_UUID, notification_handler)
-        print(" Subscribed! Waiting for data...\n")
-        
-        # Keep the script running for 60 seconds to listen for incoming data
-        await asyncio.sleep(60)
-        
-        # Clean up and disconnect
-        await client.stop_notify(CHAR_UUID)
-        print("Finished listening. Disconnecting.")
+    # Open the file in write mode
+    with open(OUTPUT_FILENAME, "w") as f:
+        file_handle = f
+        # Write CSV Headers (timestamp is now ms_since_start)
+        file_handle.write("ms_since_start,accel_x,accel_y,accel_z,gyro_x,gyro_y,gyro_z\n")
+       
+        async with BleakClient(device) as client:
+            print("Connected!")
+           
+            time.sleep(3)
+            # Subscribe to the notifications on Characteristic 4
+            print(f"Subscribing to {CHAR_UUID}...")
+            await client.start_notify(CHAR_UUID, notification_handler)
+            print(f"Subscribed! Waiting to collect {MAX_SAMPLES} samples...\n")
+           
+            # Pause this async block until stop_event.set() is called in the handler
+            await stop_event.wait()
+           
+            # Clean up and disconnect
+            await client.stop_notify(CHAR_UUID)
+            print(f"\nFinished listening. Data saved to {OUTPUT_FILENAME}. Disconnecting.")
 
 if __name__ == "__main__":
-    # Windows requires this specific event loop policy for Bleak sometimes
     import sys
     if sys.platform.startswith('win'):
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-        
+       
     asyncio.run(main())

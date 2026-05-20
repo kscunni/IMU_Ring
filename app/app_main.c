@@ -51,7 +51,8 @@ Target Device: cc23xx
 #include "ti/ble/app_util/framework/bleapputil_api.h"
 #include "ti/ble/app_util/menu/menu_module.h"
 #include <app_main.h>
-#include "test_ble_task.h"
+#include "tasks.h"
+
 //*****************************************************************************
 //! Defines
 //*****************************************************************************
@@ -126,7 +127,7 @@ void App_StackInitDoneHandler(gapDeviceInitDoneEvent_t *deviceInitDoneData)
     bStatus_t status = SUCCESS;
 
     // Menu
-    // Menu_start();
+    Menu_start();
 
     // Print the device ID address
     MenuModule_printf(APP_MENU_DEVICE_ADDRESS, 0, "BLE ID Address: "
@@ -250,6 +251,5 @@ void appMain(void)
     BLEAppUtil_init(&criticalErrorHandler, &App_StackInitDoneHandler,
                     &appMainParams, &appMainPeriCentParams);
 
-    create_SPI_task();
-    create_test_task();
+    create_imuble_task();
 }

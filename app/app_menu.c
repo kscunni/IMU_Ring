@@ -52,6 +52,10 @@ Target Device: cc23xx
 #include <app_main.h>
 #include "ti_ble_config.h"
 
+#ifdef APP_PADV_TIME_SYNC_ENABLED
+#include "app_time_sync.h"
+#endif
+
 #if !defined(Display_DISABLE_ALL)
 //*****************************************************************************
 //! Prototypes
@@ -305,7 +309,14 @@ void Menu_connectToDeviceCB(uint8 index)
 
     // Get the scan results list
     App_scanResults *menuScanRes;
-    uint8 size = Scan_getScanResList(&menuScanRes);
+    uint8 numResults = Scan_getScanResList(&menuScanRes);
+
+    if (numResults == 0 || index >= numResults)
+    {
+        MenuModule_printf(APP_MENU_GENERAL_STATUS_LINE, 0, "Call Status: Connect = "
+                          MENU_MODULE_COLOR_BOLD MENU_MODULE_COLOR_RED "No scan results" MENU_MODULE_COLOR_RESET);
+        return;
+    }
 
     // Set the connection parameters
     BLEAppUtil_ConnectParams_t connParams =
@@ -558,5 +569,15 @@ bStatus_t Menu_start()
 #endif // #if ( HOST_CONFIG & ( CENTRAL_CFG | OBSERVER_CFG | PERIPHERAL_CFG ) )
 
 #endif // #if !defined(Display_DISABLE_ALL)
+
+#ifdef APP_PADV_TIME_SYNC_ENABLED
+  // Initialize Time Sync module (TAN or TON based on APP_TIME_SYNC_ROLE)
+  status = AppTimeSync_init(NULL);
+  if (status != SUCCESS)
+  {
+      return status;
+  }
+#endif
+
   return status;
 }
