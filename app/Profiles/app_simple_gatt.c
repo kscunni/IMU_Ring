@@ -90,34 +90,34 @@ static void SimpleGatt_changeCB( uint8_t paramId )
 
   switch( paramId )
   {
-    case SIMPLEGATTPROFILE_CHAR1:
-      {
-        SimpleGattProfile_getParameter( SIMPLEGATTPROFILE_CHAR1, &newValue );
+    // case SIMPLEGATTPROFILE_CHAR1:
+    //   {
+    //     SimpleGattProfile_getParameter( SIMPLEGATTPROFILE_CHAR1, &newValue );
 
-        // Print the new value of char 1
-        MenuModule_printf(APP_MENU_PROFILE_STATUS_LINE, 0, "Profile status: Simple profile - "
-                          "Char 1 value = " MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET,
-                          newValue);
-      }
-      break;
+    //     // Print the new value of char 1
+    //     MenuModule_printf(APP_MENU_PROFILE_STATUS_LINE, 0, "Profile status: Simple profile - "
+    //                       "Char 1 value = " MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET,
+    //                       newValue);
+    //   }
+    //   break;
 
-    case SIMPLEGATTPROFILE_CHAR3:
-      {
-        SimpleGattProfile_getParameter(SIMPLEGATTPROFILE_CHAR3, &newValue);
+    // case SIMPLEGATTPROFILE_CHAR3:
+    //   {
+    //     SimpleGattProfile_getParameter(SIMPLEGATTPROFILE_CHAR3, &newValue);
 
-        // Print the new value of char 3
-        MenuModule_printf(APP_MENU_PROFILE_STATUS_LINE, 0, "Profile status: Simple profile - "
-                          "Char 3 value = " MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET,
-                          newValue);
+    //     // Print the new value of char 3
+    //     MenuModule_printf(APP_MENU_PROFILE_STATUS_LINE, 0, "Profile status: Simple profile - "
+    //                       "Char 3 value = " MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET,
+    //                       newValue);
 
-        SimpleGatt_notifyChar4();
-      }
-      break;
+    //     SimpleGatt_notifyChar4();
+    //   }
+    //   break;
     case SIMPLEGATTPROFILE_CHAR4:
       {
           // Print Notification registration to user
-          MenuModule_printf(APP_MENU_PROFILE_STATUS_LINE, 0, "Profile status: Simple profile - "
-                                    "Char 4 = Notification registration");
+          // MenuModule_printf(APP_MENU_PROFILE_STATUS_LINE, 0, "Profile status: Simple profile - "
+          //                           "Char 4 = Notification registration");
 
           SimpleGatt_notifyChar4();
           break;
@@ -153,22 +153,22 @@ bStatus_t SimpleGatt_start( void )
   // For more information, see the GATT and GATTServApp sections in the User's Guide:
   // All the documentation and collateral applicable can be found on TI Developer Zone - https://dev.ti.com/
   {
-    uint8_t charValue1 = 1;
-    uint8_t charValue2 = 2;
-    uint8_t charValue3 = 3;
+    // uint8_t charValue1 = 1;
+    // uint8_t charValue2 = 2;
+    // uint8_t charValue3 = 3;
     uint8_t charValue4 = 4;
-    uint8_t charValue5[SIMPLEGATTPROFILE_CHAR5_LEN] = { 1, 2, 3, 4, 5 };
+    // uint8_t charValue5[SIMPLEGATTPROFILE_CHAR5_LEN] = { 1, 2, 3, 4, 5 };
 
-    SimpleGattProfile_setParameter( SIMPLEGATTPROFILE_CHAR1, sizeof(uint8_t),
-                                    &charValue1 );
-    SimpleGattProfile_setParameter( SIMPLEGATTPROFILE_CHAR2, sizeof(uint8_t),
-                                    &charValue2 );
-    SimpleGattProfile_setParameter( SIMPLEGATTPROFILE_CHAR3, sizeof(uint8_t),
-                                    &charValue3 );
+    // SimpleGattProfile_setParameter( SIMPLEGATTPROFILE_CHAR1, sizeof(uint8_t),
+    //                                 &charValue1 );
+    // SimpleGattProfile_setParameter( SIMPLEGATTPROFILE_CHAR2, sizeof(uint8_t),
+    //                                 &charValue2 );
+    // SimpleGattProfile_setParameter( SIMPLEGATTPROFILE_CHAR3, sizeof(uint8_t),
+    //                                 &charValue3 );
     SimpleGattProfile_setParameter( SIMPLEGATTPROFILE_CHAR4, sizeof(uint8_t),
                                     &charValue4 );
-    SimpleGattProfile_setParameter( SIMPLEGATTPROFILE_CHAR5, SIMPLEGATTPROFILE_CHAR5_LEN,
-                                    charValue5 );
+    // SimpleGattProfile_setParameter( SIMPLEGATTPROFILE_CHAR5, SIMPLEGATTPROFILE_CHAR5_LEN,
+    //                                 charValue5 );
   }
   // Register callback with SimpleGATTprofile
   status = SimpleGattProfile_registerAppCBs( &simpleGatt_profileCBs );

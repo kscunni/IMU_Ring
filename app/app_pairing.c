@@ -122,21 +122,21 @@ void Pairing_pairStateHandler(uint32 event, BLEAppUtil_msgHdr_t *pMsgData)
     {
         case BLEAPPUTIL_PAIRING_STATE_STARTED:
         {
-            MenuModule_printf(APP_MENU_PAIRING_EVENT, 0, "Pairing Status: Started - "
-                              "connectionHandle = "MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET
-                              "status = "MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET,
-                              ((BLEAppUtil_PairStateData_t *)pMsgData)->connHandle,
-                              ((BLEAppUtil_PairStateData_t *)pMsgData)->status);
+            // MenuModule_printf(APP_MENU_PAIRING_EVENT, 0, "Pairing Status: Started - "
+            //                   "connectionHandle = "MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET
+            //                   "status = "MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET,
+            //                   ((BLEAppUtil_PairStateData_t *)pMsgData)->connHandle,
+            //                   ((BLEAppUtil_PairStateData_t *)pMsgData)->status);
 
             break;
         }
         case BLEAPPUTIL_PAIRING_STATE_COMPLETE:
         {
-            MenuModule_printf(APP_MENU_PAIRING_EVENT, 0, "Pairing Status: Complete - "
-                              "connectionHandle = "MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET
-                              "status = "MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET,
-                              ((BLEAppUtil_PairStateData_t *)pMsgData)->connHandle,
-                              ((BLEAppUtil_PairStateData_t *)pMsgData)->status);
+            // MenuModule_printf(APP_MENU_PAIRING_EVENT, 0, "Pairing Status: Complete - "
+            //                   "connectionHandle = "MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET
+            //                   "status = "MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET,
+            //                   ((BLEAppUtil_PairStateData_t *)pMsgData)->connHandle,
+            //                   ((BLEAppUtil_PairStateData_t *)pMsgData)->status);
 
             // The pairing is completed, so update the entry in connection list
             // to the ID address instead of the RP address
@@ -167,21 +167,21 @@ void Pairing_pairStateHandler(uint32 event, BLEAppUtil_msgHdr_t *pMsgData)
 
         case BLEAPPUTIL_PAIRING_STATE_ENCRYPTED:
         {
-            MenuModule_printf(APP_MENU_PAIRING_EVENT, 0, "Pairing Status: Encrypted - "
-                              "connectionHandle = "MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET
-                              "status = "MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET,
-                              ((BLEAppUtil_PairStateData_t *)pMsgData)->connHandle,
-                              ((BLEAppUtil_PairStateData_t *)pMsgData)->status);
+            // MenuModule_printf(APP_MENU_PAIRING_EVENT, 0, "Pairing Status: Encrypted - "
+            //                   "connectionHandle = "MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET
+            //                   "status = "MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET,
+            //                   ((BLEAppUtil_PairStateData_t *)pMsgData)->connHandle,
+            //                   ((BLEAppUtil_PairStateData_t *)pMsgData)->status);
             break;
         }
 
         case BLEAPPUTIL_PAIRING_STATE_BOND_SAVED:
         {
-            MenuModule_printf(APP_MENU_PAIRING_EVENT, 0, "Pairing Status: Bond saved - "
-                              "connectionHandle = "MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET
-                              "status = "MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET,
-                              ((BLEAppUtil_PairStateData_t *)pMsgData)->connHandle,
-                              ((BLEAppUtil_PairStateData_t *)pMsgData)->status);
+            // MenuModule_printf(APP_MENU_PAIRING_EVENT, 0, "Pairing Status: Bond saved - "
+            //                   "connectionHandle = "MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET
+            //                   "status = "MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET,
+            //                   ((BLEAppUtil_PairStateData_t *)pMsgData)->connHandle,
+            //                   ((BLEAppUtil_PairStateData_t *)pMsgData)->status);
             break;
         }
 

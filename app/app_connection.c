@@ -121,15 +121,15 @@ void Connection_ConnEventHandler(uint32 event, BLEAppUtil_msgHdr_t *pMsgData)
             Connection_addConnInfo(gapEstMsg->connectionHandle, gapEstMsg->devAddr);
 
             /*! Print the peer address and connection handle number */
-            MenuModule_printf(APP_MENU_CONN_EVENT, 0, "Conn status: Established - "
-                              "Connected to " MENU_MODULE_COLOR_YELLOW "%s " MENU_MODULE_COLOR_RESET
-                              "connectionHandle = " MENU_MODULE_COLOR_YELLOW "%d" MENU_MODULE_COLOR_RESET,
-                              BLEAppUtil_convertBdAddr2Str(gapEstMsg->devAddr), gapEstMsg->connectionHandle);
+            // MenuModule_printf(APP_MENU_CONN_EVENT, 0, "Conn status: Established - "
+            //                   "Connected to " MENU_MODULE_COLOR_YELLOW "%s " MENU_MODULE_COLOR_RESET
+            //                   "connectionHandle = " MENU_MODULE_COLOR_YELLOW "%d" MENU_MODULE_COLOR_RESET,
+            //                   BLEAppUtil_convertBdAddr2Str(gapEstMsg->devAddr), gapEstMsg->connectionHandle);
 
-            /*! Print the number of current connections */
-            MenuModule_printf(APP_MENU_NUM_CONNS, 0, "Connections number: "
-                              MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET,
-                              linkDB_NumActive());
+            // /*! Print the number of current connections */
+            // MenuModule_printf(APP_MENU_NUM_CONNS, 0, "Connections number: "
+            //                   MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET,
+            //                   linkDB_NumActive());
 
             break;
         }
@@ -142,15 +142,15 @@ void Connection_ConnEventHandler(uint32 event, BLEAppUtil_msgHdr_t *pMsgData)
             Connection_removeConnInfo(gapTermMsg->connectionHandle);
 
             /*! Print the peer address and connection handle number */
-            MenuModule_printf(APP_MENU_CONN_EVENT, 0, "Conn status: Terminated - "
-                              "connectionHandle = " MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET
-                              "reason = " MENU_MODULE_COLOR_YELLOW "%d" MENU_MODULE_COLOR_RESET,
-                              gapTermMsg->connectionHandle, gapTermMsg->reason);
+            // MenuModule_printf(APP_MENU_CONN_EVENT, 0, "Conn status: Terminated - "
+            //                   "connectionHandle = " MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET
+            //                   "reason = " MENU_MODULE_COLOR_YELLOW "%d" MENU_MODULE_COLOR_RESET,
+            //                   gapTermMsg->connectionHandle, gapTermMsg->reason);
 
-            /*! Print the number of current connections */
-            MenuModule_printf(APP_MENU_NUM_CONNS, 0, "Connections number: "
-                              MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET,
-                              linkDB_NumActive());
+            // /*! Print the number of current connections */
+            // MenuModule_printf(APP_MENU_NUM_CONNS, 0, "Connections number: "
+            //                   MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET,
+            //                   linkDB_NumActive());
 
             break;
         }
@@ -179,23 +179,23 @@ void Connection_ConnEventHandler(uint32 event, BLEAppUtil_msgHdr_t *pMsgData)
 
             // Get the address from the connection handle
             linkDBInfo_t linkInfo;
-            if (linkDB_GetInfo(pPkt->connectionHandle, &linkInfo) ==  SUCCESS)
-            {
-              // The status HCI_ERROR_CODE_PARAM_OUT_OF_MANDATORY_RANGE indicates that connection params did not change but the req and rsp still transpire
-              if(pPkt->status == SUCCESS)
-              {
-                  MenuModule_printf(APP_MENU_CONN_EVENT, 0, "Conn status: Params update - "
-                                    "connectionHandle = " MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET,
-                                    pPkt->connectionHandle);
-              }
-              else
-              {
-                  MenuModule_printf(APP_MENU_CONN_EVENT, 0, "Conn status: Params update failed - "
-                                    MENU_MODULE_COLOR_YELLOW "0x%x " MENU_MODULE_COLOR_RESET
-                                    "connectionHandle = " MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET,
-                                    pPkt->opcode, pPkt->connectionHandle);
-              }
-            }
+            // if (linkDB_GetInfo(pPkt->connectionHandle, &linkInfo) ==  SUCCESS)
+            // {
+            //   // The status HCI_ERROR_CODE_PARAM_OUT_OF_MANDATORY_RANGE indicates that connection params did not change but the req and rsp still transpire
+            //   if(pPkt->status == SUCCESS)
+            //   {
+            //       MenuModule_printf(APP_MENU_CONN_EVENT, 0, "Conn status: Params update - "
+            //                         "connectionHandle = " MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET,
+            //                         pPkt->connectionHandle);
+            //   }
+            //   else
+            //   {
+            //       MenuModule_printf(APP_MENU_CONN_EVENT, 0, "Conn status: Params update failed - "
+            //                         MENU_MODULE_COLOR_YELLOW "0x%x " MENU_MODULE_COLOR_RESET
+            //                         "connectionHandle = " MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET,
+            //                         pPkt->opcode, pPkt->connectionHandle);
+            //   }
+            // }
 
             break;
         }
@@ -231,17 +231,17 @@ void Connection_HciGAPEventHandler(uint32 event, BLEAppUtil_msgHdr_t *pMsgData)
             {
               case HCI_LE_SET_PHY:
               {
-                  if (pHciMsg->cmdStatus ==
-                      HCI_ERROR_CODE_UNSUPPORTED_REMOTE_FEATURE)
-                  {
-                      MenuModule_printf(APP_MENU_CONN_EVENT, 0, "Conn status: Phy update - failure, peer does not support this");
-                  }
-                  else
-                  {
-                      MenuModule_printf(APP_MENU_CONN_EVENT, 0, "Conn status: Phy update - "
-                                        MENU_MODULE_COLOR_YELLOW "0x%02x" MENU_MODULE_COLOR_RESET,
-                                        pHciMsg->cmdStatus);
-                  }
+                  // if (pHciMsg->cmdStatus ==
+                  //     HCI_ERROR_CODE_UNSUPPORTED_REMOTE_FEATURE)
+                  // {
+                  //     MenuModule_printf(APP_MENU_CONN_EVENT, 0, "Conn status: Phy update - failure, peer does not support this");
+                  // }
+                  // else
+                  // {
+                  //     MenuModule_printf(APP_MENU_CONN_EVENT, 0, "Conn status: Phy update - "
+                  //                       MENU_MODULE_COLOR_YELLOW "0x%02x" MENU_MODULE_COLOR_RESET,
+                  //                       pHciMsg->cmdStatus);
+                  // }
                   break;
               }
 
@@ -262,8 +262,8 @@ void Connection_HciGAPEventHandler(uint32 event, BLEAppUtil_msgHdr_t *pMsgData)
             {
               if (pPUC->status != SUCCESS)
               {
-                  MenuModule_printf(APP_MENU_CONN_EVENT, 0, "Conn status: Phy update failure - connHandle = %d",
-                                    pPUC->connHandle);
+                  // MenuModule_printf(APP_MENU_CONN_EVENT, 0, "Conn status: Phy update failure - connHandle = %d",
+                  //                   pPUC->connHandle);
               }
               else
               {
@@ -272,8 +272,8 @@ void Connection_HciGAPEventHandler(uint32 event, BLEAppUtil_msgHdr_t *pMsgData)
                           (pPUC->rxPhy == PHY_UPDATE_COMPLETE_EVENT_1M) ? "1 Mbps" :
                           (pPUC->rxPhy == PHY_UPDATE_COMPLETE_EVENT_2M) ? "2 Mbps" :
                           (pPUC->rxPhy == PHY_UPDATE_COMPLETE_EVENT_CODED) ? "CODED" : "Unexpected PHY Value";
-                  MenuModule_printf(APP_MENU_CONN_EVENT, 0, "Conn status: Phy update - connHandle = %d PHY = %s",
-                                    pPUC->connHandle, currPhy);
+                  // MenuModule_printf(APP_MENU_CONN_EVENT, 0, "Conn status: Phy update - connHandle = %d PHY = %s",
+                  //                   pPUC->connHandle, currPhy);
 #endif // #if !defined(Display_DISABLE_ALL)
               }
             }

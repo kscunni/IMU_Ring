@@ -124,17 +124,17 @@ void Peripheral_AdvEventHandler(uint32 event, BLEAppUtil_msgHdr_t *pMsgData)
     {
         case BLEAPPUTIL_ADV_START_AFTER_ENABLE:
         {
-            MenuModule_printf(APP_MENU_ADV_EVENT, 0, "Adv status: Started - handle: "
-                              MENU_MODULE_COLOR_YELLOW "%d" MENU_MODULE_COLOR_RESET,
-                              ((BLEAppUtil_AdvEventData_t *)pMsgData)->pBuf->advHandle);
+            // MenuModule_printf(APP_MENU_ADV_EVENT, 0, "Adv status: Started - handle: "
+            //                   MENU_MODULE_COLOR_YELLOW "%d" MENU_MODULE_COLOR_RESET,
+            //                   ((BLEAppUtil_AdvEventData_t *)pMsgData)->pBuf->advHandle);
             break;
         }
 
         case BLEAPPUTIL_ADV_END_AFTER_DISABLE:
         {
-            MenuModule_printf(APP_MENU_ADV_EVENT, 0, "Adv status: Ended - handle: "
-                              MENU_MODULE_COLOR_YELLOW "%d" MENU_MODULE_COLOR_RESET,
-                              ((BLEAppUtil_AdvEventData_t *)pMsgData)->pBuf->advHandle);
+        //     MenuModule_printf(APP_MENU_ADV_EVENT, 0, "Adv status: Ended - handle: "
+        //                       MENU_MODULE_COLOR_YELLOW "%d" MENU_MODULE_COLOR_RESET,
+        //                       ((BLEAppUtil_AdvEventData_t *)pMsgData)->pBuf->advHandle);
             break;
         }
 

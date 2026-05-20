@@ -95,14 +95,14 @@ static void GATT_EventHandler(uint32 event, BLEAppUtil_msgHdr_t *pMsgData)
   {
     case ATT_FLOW_CTRL_VIOLATED_EVENT:
       {
-          MenuModule_printf(APP_MENU_PROFILE_STATUS_LINE, 0, "GATT status: ATT flow control is violated");
+          // MenuModule_printf(APP_MENU_PROFILE_STATUS_LINE, 0, "GATT status: ATT flow control is violated");
       }
       break;
 
     case ATT_MTU_UPDATED_EVENT:
       {
-          MenuModule_printf(APP_MENU_PROFILE_STATUS_LINE, 0, "GATT status: ATT MTU update to %d",
-                            gattMsg->msg.mtuEvt.MTU);
+          // MenuModule_printf(APP_MENU_PROFILE_STATUS_LINE, 0, "GATT status: ATT MTU update to %d",
+          //                   gattMsg->msg.mtuEvt.MTU);
       }
       break;
 
