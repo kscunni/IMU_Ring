@@ -6,7 +6,7 @@ from bleak import BleakScanner, BleakClient
 # --- Configuration ---
 DEVICE_NAME = "IMU_Ring" 
 CHAR_UUID = "0000fff4-0000-1000-8000-00805f9b34fb"
-MAX_SAMPLES = 100000
+MAX_SAMPLES = 3000
 OUTPUT_FILENAME = "imu_data.csv"
 
 # Global state tracking
