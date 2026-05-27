@@ -12,7 +12,7 @@
 	<templateProperties value="id=basic_ble_LP_EM_CC2340R5_freertos_ticlang.projectspec.basic_ble_2,buildProfile=release,isHybrid=true"/>
 	<activeTargetConfiguration value="targetConfigs/CC2340R5.ccxml"/>
 	<isTargetConfigurationManual value="false"/>
-	<origin value="C:/Users/kscunni/temp/tocopy/IMU_Ring"/>
+	<origin value="/home/kevin/code/IMU_Ring"/>
 	<filesToOpen value=""/>
 	<convertedVirtualResources value="common/Profiles/simple_gatt/simple_gatt_profile.c::(type=1;location=COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/profiles/simple_gatt/src/simple_gatt_profile.c;),common/Profiles/simple_gatt/simple_gatt_profile.h::(type=1;location=COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/profiles/simple_gatt/simple_gatt_profile.h;)"/>
 </projectOptions>

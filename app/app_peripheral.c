@@ -71,6 +71,7 @@ Target Device: cc23xx
 #include "ti/ble/app_util/framework/bleapputil_api.h"
 #include "ti/ble/app_util/menu/menu_module.h"
 #include <app_main.h>
+#include <ti/drivers/dpl/ClockP.h>
 
 //*****************************************************************************
 //! Prototypes
@@ -102,29 +103,78 @@ BLEAppUtil_EventHandler_t peripheralAdvHandler =
 //! Stores adv handles
 uint8_t peripheralAdvHandles[BLE_CONFIG_NUM_ADV_SETS];
 
+//! For param update delay
+static ClockP_Struct paramUpdateClock;
+//! handle for connection to send param update req to
+static uint16_t ConnHandle = 0xFFFF;
+
 //*****************************************************************************
 //! Functions
 //*****************************************************************************
 
-
-static void requestConnParamUpdate(uint16_t connHandle)
+static void requestConnParamUpdate(char *data)
 {
-    gapUpdateLinkParamReq_t req =
+    // gapUpdateLinkParamReq_t req =
+    // {
+    //     .connectionHandle = connHandle,
+
+    //     // 24 * 1.25ms = 30ms
+    //     .intervalMin = 24,
+    //     .intervalMax = 24,
+
+    //     .connLatency = 0,
+
+    //     // 500 * 10ms = 5s supervision timeout
+    //     .connTimeout = 500
+    // };
+
+    // GAP_UpdateLinkParamReq(&req);
+
+    bStatus_t status;
+    gapUpdateLinkParamReq_t pParamUpdateReq =
     {
-        .connectionHandle = connHandle,
-
-        // 24 * 1.25ms = 30ms
-        .intervalMin = 24,
-        .intervalMax = 24,
-
-        .connLatency = 0,
-
-        // 500 * 10ms = 5s supervision timeout
-        .connTimeout = 500
+     .connectionHandle = ConnHandle,
+     .intervalMin = DEFAULT_DESIRED_MIN_CONN_INTERVAL,
+     .intervalMax = DEFAULT_DESIRED_MAX_CONN_INTERVAL,
+     .connLatency = DEFAULT_DESIRED_PERIPHERAL_LATENCY,
+     .connTimeout = DEFAULT_DESIRED_CONN_TIMEOUT
     };
 
-    GAP_UpdateLinkParamReq(&req);
+    // Send a connection param update request
+    status = GAP_UpdateLinkParamReq(&pParamUpdateReq);
 }
+
+// 2a. This triggers when the clock expires (Swi Context!)
+static void App_paramUpdateClockHandler(uintptr_t arg)
+{
+    // Offload the actual GAP call to the main application task thread
+    BLEAppUtil_invokeFunction(requestConnParamUpdate, NULL);
+}
+
+void App_initParamUpdateClock(void)
+{
+    ClockP_Params clockParams;
+    ClockP_Params_init(&clockParams);
+    
+    // Set to false so it doesn't start automatically
+    clockParams.startFlag = false; 
+    
+    // For a one-shot timer, period must be 0 
+    // (ClockP_Params_init sets this by default, but it is good to be explicit)
+    clockParams.period = 0; 
+    
+    // Convert 2000 milliseconds to system ticks
+    uint32_t timeoutTicks = (2000 * 1000) / ClockP_getSystemTickPeriod(); 
+    
+    // Construct the clock object - Notice timeoutTicks is the 3rd argument!
+    ClockP_construct(&paramUpdateClock, 
+                     (ClockP_Fxn)App_paramUpdateClockHandler, 
+                     timeoutTicks,  
+                     &clockParams);
+}
+
+
+
 
 
 /*********************************************************************
@@ -184,6 +234,10 @@ void Peripheral_GAPConnEventHandler(uint32 event, BLEAppUtil_msgHdr_t *pMsgData)
     {
         case BLEAPPUTIL_LINK_ESTABLISHED_EVENT:
         {
+            //! UNCOMMENT HERE
+            // gapEstLinkReqEvent_t *pPkt = (gapEstLinkReqEvent_t *)pMsgData;
+            // ConnHandle = (pPkt->connectionHandle);
+            // ClockP_start(ClockP_handle(&paramUpdateClock));
             /* Check if we reach the maximum allowed number of connections */
             if(linkDB_NumActive() < linkDB_NumConns())
             {
@@ -251,6 +305,8 @@ bStatus_t Peripheral_start()
     }
     
     BleConfig_startAdvSets(peripheralAdvHandles, NULL, BLE_CONFIG_NUM_ADV_SETS);
+    //! UNCOMMENT HERE
+    // App_initParamUpdateClock();
 
     // Return status value
     return(status);

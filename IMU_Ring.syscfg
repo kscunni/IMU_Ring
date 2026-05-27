@@ -3,7 +3,7 @@
  * via the GUI or CLI. Run CLI with '--help' for additional information on how to override these arguments.
  * @cliArgs --board "/ti/boards/LP_EM_CC2340R5" --device "CC2340R5RKP" --part "Default" --package "RKP" --rtos "freertos" --product "simplelink_lowpower_f3_sdk@9.20.00.81"
  * @v2CliArgs --board "/ti/boards/LP_EM_CC2340R5" --device "CC2340R5" --package "VQFN (RKP)" --variant "CC2340R52" --rtos "freertos" --product "simplelink_lowpower_f3_sdk@9.20.00.81"
- * @versions {"tool":"1.26.3+4529"}
+ * @versions {"tool":"1.26.3+4558"}
  */
 
 /**
@@ -46,16 +46,21 @@ ble.radioConfig.codeExportConfig.$name                         = "ti_devices_rad
 ble.adcNoiseConfig.codeExportConfig.$name                      = "ti_devices_radioconfig_code_export_param1";
 ble.bleCsConfig.codeExportConfig.$name                         = "ti_devices_radioconfig_code_export_param2";
 ble.connUpdateParamsPeripheral.$name                           = "ti_ble_general_ble_conn_update_params0";
-ble.connUpdateParamsPeripheral.reqMinConnInt                   = 7.5;
-ble.connUpdateParamsPeripheral.reqMaxConnInt                   = 30;
+ble.connUpdateParamsPeripheral.reqMaxConnInt                   = 60;
+ble.connUpdateParamsPeripheral.reqMinConnInt                   = 10;
 ble.advSet1.$name                                              = "ti_ble_broadcaster_advertisement_set0";
 ble.advSet1.advParam1.$name                                    = "ti_ble_broadcaster_advertisement_params0";
 ble.advSet1.advData1.$name                                     = "ti_ble_broadcaster_advertisement_data0";
 ble.advSet1.advData1.GAP_ADTYPE_16BIT_MORE                     = true;
 ble.advSet1.advData1.numOfUUIDs16More                          = 1;
 ble.advSet1.advData1.UUID016More                               = 0xFFF0;
+ble.advSet1.advData1.GAP_ADTYPE_PERIPHERAL_CONN_INTERVAL_RANGE = true;
+ble.advSet1.advData1.minConnInterval                           = 10;
+ble.advSet1.advData1.maxConnInterval                           = 30;
 ble.advSet1.scanRes1.$name                                     = "ti_ble_broadcaster_advertisement_data1";
 ble.advSet1.scanRes1.GAP_ADTYPE_PERIPHERAL_CONN_INTERVAL_RANGE = true;
+ble.advSet1.scanRes1.minConnInterval                           = 10;
+ble.advSet1.scanRes1.maxConnInterval                           = 30;
 ble.rng.$name                                                  = "CONFIG_RNG_0";
 ble.aesccm.$name                                               = "CONFIG_AESCCM_0";
 ble.ecdh.$name                                                 = "CONFIG_ECDH_0";

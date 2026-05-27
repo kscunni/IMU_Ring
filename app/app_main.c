@@ -70,6 +70,15 @@ BLEAppUtil_GeneralParams_t appMainParams =
     .addressMode = DEFAULT_ADDRESS_MODE,
     .deviceNameAtt = attDeviceName,
     .pDeviceRandomAddress = pRandomAddress,
+    .periConnParamsAtt = {
+   .intervalMin = 12,
+  /// Maximum value for the connection event (interval. 0x0006 - 0x0C80 * 1.25 ms)
+  .intervalMax = 24,
+  /// Number of LL latency connection events (0x0000 - 0x03e8)
+  .latency = 0,
+  /// Connection Timeout (0x000A - 0x0C80 * 10 ms)
+  .timeout = 600,
+},
 };
 
 #if defined( HOST_CONFIG ) && ( HOST_CONFIG & ( PERIPHERAL_CFG | CENTRAL_CFG ) )
