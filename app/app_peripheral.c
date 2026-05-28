@@ -235,9 +235,9 @@ void Peripheral_GAPConnEventHandler(uint32 event, BLEAppUtil_msgHdr_t *pMsgData)
         case BLEAPPUTIL_LINK_ESTABLISHED_EVENT:
         {
             //! UNCOMMENT HERE
-            // gapEstLinkReqEvent_t *pPkt = (gapEstLinkReqEvent_t *)pMsgData;
-            // ConnHandle = (pPkt->connectionHandle);
-            // ClockP_start(ClockP_handle(&paramUpdateClock));
+            gapEstLinkReqEvent_t *pPkt = (gapEstLinkReqEvent_t *)pMsgData;
+            ConnHandle = (pPkt->connectionHandle);
+            ClockP_start(ClockP_handle(&paramUpdateClock));
             /* Check if we reach the maximum allowed number of connections */
             if(linkDB_NumActive() < linkDB_NumConns())
             {
@@ -306,7 +306,7 @@ bStatus_t Peripheral_start()
     
     BleConfig_startAdvSets(peripheralAdvHandles, NULL, BLE_CONFIG_NUM_ADV_SETS);
     //! UNCOMMENT HERE
-    // App_initParamUpdateClock();
+    App_initParamUpdateClock();
 
     // Return status value
     return(status);
