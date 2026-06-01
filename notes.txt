@@ -1,0 +1,27 @@
+
+If we batch packets together to reduce the bluetooth overhead, it should be possible to calculate the linear motion data on the TI chip,
+ at the expense of battery life. While there isn't an FP unit, the MCU isn't doing much right now so it should have enough time to use FP
+ emulation if we want it to. 
+
+Could cut the sampling rate to 50hz, FIFO 8 readings at a time from the IMU, then calculate the linear motion, and send 8 readings of both raw and linear 
+with timestamps over BLE every ~160ms. Could set the connection interval to be shorter than that in case something gets dropped it wont get behind, though so 
+far connection interval requests have been ignored by the computers I test with. It may be possible to set that on the phone app side.
+
+The BLE connection interval will probably have the greatest impact on battery life of the ring, since the radio is the most power hungry component. 
+It seems like 15hz is used for the bite counter, so 50hz should be plenty, which allows an even longer interval.
+
+We can use the APEX no-motion to trigger the ICM chip's self calibration, but it must run through an interrupt to the MCU. This should mostly eliminate drift 
+in the linear acceleration caused from gyro inaccuracy. This is a good idea no matter where we calculate the linear acceleration.
+
+
+1. Configure to use FIFO 8 at a time
+
+1.5. Bluetooth with the FIFO 8 at a time
+
+2. configure APEX no-motion to share INT1 with the FIFO ready
+
+3. Add in the self calibration
+
+4. Add in Fusion as a separate branch
+
+Going to stick to 100hz for now.
