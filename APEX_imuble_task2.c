@@ -69,27 +69,37 @@ void init_icm45605(void)
     rc |= inv_imu_set_accel_mode(&imu_dev, PWR_MGMT0_ACCEL_MODE_LN);
     rc |= inv_imu_set_gyro_mode(&imu_dev, PWR_MGMT0_GYRO_MODE_LN);
 
-    /* --- 3. APEX Engine Configuration --- */
+/* --- 3. APEX Engine Configuration --- */
+    
+    rc |= inv_imu_adv_power_up_sram(&imu_dev); 
+
     rc |= inv_imu_edmp_init_apex(&imu_dev);
     rc |= inv_imu_edmp_set_frequency(&imu_dev, DMP_EXT_SEN_ODR_CFG_APEX_ODR_50_HZ);
     rc |= inv_imu_edmp_recompute_apex_decimation(&imu_dev);
 
-    uint8_t wom_threshold = 13; // 50mg is highly sensitive
+    // WoM needed for basic_smd
+    uint8_t wom_threshold = 13; // Need to tune this more, probably lower it
     
     rc |= inv_imu_adv_configure_wom(&imu_dev, 
-                                    wom_threshold,  // X threshold
-                                    wom_threshold,  // Y threshold
-                                    wom_threshold,  // Z threshold
+                                    wom_threshold,  // X 
+                                    wom_threshold,  // Y 
+                                    wom_threshold,  // Z 
                                     TMST_WOM_CONFIG_WOM_INT_MODE_ORED, 
                                     TMST_WOM_CONFIG_WOM_INT_DUR_1_SMPL);
 
+    
+    rc |= inv_imu_adv_enable_wom(&imu_dev);
     inv_imu_edmp_apex_parameters_t apex_params;
     rc |= inv_imu_edmp_get_apex_parameters(&imu_dev, &apex_params);
-    apex_params.basicsmd_win = 1;       
+    apex_params.basicsmd_win = 10; // may need to tune this too.       
     apex_params.basicsmd_win_wait = 1;
     rc |= inv_imu_edmp_set_apex_parameters(&imu_dev, &apex_params);
 
-    // Enable SMD (Significant Motion Detection)
+    rc |= inv_imu_edmp_enable(&imu_dev);
+
+    // Wait for boot up
+    delay_us(1000); 
+
     rc |= inv_imu_edmp_enable_smd(&imu_dev);
 
     // Route SMD flag to internal registers only
