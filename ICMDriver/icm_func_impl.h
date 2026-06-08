@@ -1,4 +1,5 @@
 #include <ti/drivers/SPI.h>
+#include <imu/inv_imu_driver.h>
 
 extern SPI_Handle spiHandle; // Needs to be accessible by your icm_func_impl.h functions
 
@@ -17,3 +18,4 @@ int spi_write_reg(uint8_t reg, const uint8_t *buf, uint32_t len);
  */
 void delay_us(uint32_t us);
 
+int inv_imu_set_gyro_offset(inv_imu_device_t *s, int16_t offset_x, int16_t offset_y, int16_t offset_z);

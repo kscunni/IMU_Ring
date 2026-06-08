@@ -123,3 +123,36 @@ void delay_us(uint32_t us) {
     // Standard POSIX delay function provided by TI-RTOS / TI SDK
     usleep(us);
 }
+
+
+
+/**
+ * Write Gyro offsets for ICM-45605
+ * @param s Pointer to the initialized inv_imu_device struct
+ * @param offset_x 14-bit X-axis offset (7.5 mdps / LSB)
+ * @param offset_y 14-bit Y-axis offset (7.5 mdps / LSB)
+ * @param offset_z 14-bit Z-axis offset (7.5 mdps / LSB)
+ */
+int inv_imu_set_gyro_offset(inv_imu_device_t *s, int16_t offset_x, int16_t offset_y, int16_t offset_z) {
+    int status = 0;
+    uint8_t data[2];
+
+    // IPREG_SYS1 base address is 0xA400.
+
+    // --- X-Axis (Registers 42 & 43) ---
+    data[0] = offset_x & 0xFF;                 // REG_42: Low byte
+    data[1] = (offset_x >> 8) & 0x3F;          // REG_43: High byte (14-bit limit)
+    status |= inv_imu_write_reg(s, (0xA400 + 42), 2, data); 
+
+    // --- Y-Axis (Registers 56 & 57) ---
+    data[0] = offset_y & 0xFF;                 // REG_56: Low byte
+    data[1] = (offset_y >> 8) & 0x3F;          // REG_57: High byte (14-bit limit)
+    status |= inv_imu_write_reg(s, (0xA400 + 56), 2, data); 
+
+    // --- Z-Axis (Registers 70 & 71) ---
+    data[0] = offset_z & 0xFF;                 // REG_70: Low byte
+    data[1] = (offset_z >> 8) & 0x3F;          // REG_71: High byte (14-bit limit)
+    status |= inv_imu_write_reg(s, (0xA400 + 70), 2, data); 
+
+    return status;
+}

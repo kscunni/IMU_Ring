@@ -19,6 +19,8 @@ int16_t ble_payload[48];
 static Display_Handle displayHandle;
 static TaskHandle_t imuble_task_handle = NULL;
 
+int16_t goffsetx = -46, goffsety = 8, goffsetz = -12;
+
 #define TASK_STACK_SIZE 1024
 #define TASK_PRIORITY 1
 
@@ -63,6 +65,8 @@ void init_icm45605(void)
     rc |= inv_imu_set_gyro_frequency(&imu_dev, GYRO_CONFIG0_GYRO_ODR_100_HZ);
     rc |= inv_imu_set_accel_mode(&imu_dev, PWR_MGMT0_ACCEL_MODE_LN);
     rc |= inv_imu_set_gyro_mode(&imu_dev, PWR_MGMT0_GYRO_MODE_LN);
+
+    rc |= inv_imu_set_gyro_offset(&imu_dev, goffsetx, goffsety, goffsetz);
 
     /* --- 3. Interrupt Pin Setup --- */
     // Using PULSE mode is recommended for FIFO thresholds

@@ -231,7 +231,7 @@
                         </toolChain>
                     </folderInfo>
                     <sourceEntries>
-                        <entry excluding="APEX_imuble_task.c|IMUFIFOtask.c|test_IMUBLE_task.c|ICMDriver/icm45605|ICMDriver/examples" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+                        <entry excluding="test_IMUBLE_task.c|APEX_imuble_task2.c|APEX_imuble_task.c|ICMDriver/icm45605|ICMDriver/examples" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
                     </sourceEntries>
                 </configuration>
             </storageModule>
