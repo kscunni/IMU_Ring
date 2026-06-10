@@ -25,3 +25,13 @@ in the linear acceleration caused from gyro inaccuracy. This is a good idea no m
 4. Add in Fusion as a separate branch
 
 Going to stick to 100hz for now.
+
+    GPIO_write(CONFIG_LED_0_GPIO, CONFIG_GPIO_LED_ON);
+
+
+The raw data could be provided at 100hz, and sensor fusion data at 16.67 hz. Is this useful?
+BLE packet of 6 raw with timestamps, and 1 linear accel + sensor fusion data point at the end
+
+Any other interval is also fine, like every 5 raw for 20hz or every 4 raw for 25 hz.
+
+For an inconsistent spacing of raw data, would need to do it on the phone ( like 15hz, every 6.666 is not practical )
