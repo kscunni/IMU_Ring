@@ -32,9 +32,9 @@ const Settings = scripting.addModule("/ti/posix/freertos/Settings");
 /**
  * Write custom configuration values to the imported modules.
  */
-FreeRTOS.heapSize       = 0x00004D50;
 FreeRTOS.timerStackSize = 0x00000190;
 FreeRTOS.idleStackSize  = 0x00000130;
+FreeRTOS.heapSize       = 0x00005908;
 
 ble.basicBLE                                                   = true;
 ble.disDevBySerUuid                                            = true;
@@ -42,14 +42,13 @@ ble.numOfAdvSets                                               = 1;
 ble.deviceName                                                 = "IMU_Ring";
 ble.disableDisplayModule                                       = true;
 ble.bondIOCaps                                                 = "GAPBOND_IO_CAP_NO_INPUT_NO_OUTPUT";
-ble.maxPDUSize                                                 = 120;
-ble.maxPDUNum                                                  = 6;
+ble.maxPDUSize                                                 = 240;
 ble.radioConfig.codeExportConfig.$name                         = "ti_devices_radioconfig_code_export_param0";
 ble.adcNoiseConfig.codeExportConfig.$name                      = "ti_devices_radioconfig_code_export_param1";
 ble.bleCsConfig.codeExportConfig.$name                         = "ti_devices_radioconfig_code_export_param2";
 ble.connUpdateParamsPeripheral.$name                           = "ti_ble_general_ble_conn_update_params0";
-ble.connUpdateParamsPeripheral.reqMinConnInt                   = 60;
-ble.connUpdateParamsPeripheral.reqMaxConnInt                   = 80;
+ble.connUpdateParamsPeripheral.reqMinConnInt                   = 30;
+ble.connUpdateParamsPeripheral.reqMaxConnInt                   = 60;
 ble.advSet1.$name                                              = "ti_ble_broadcaster_advertisement_set0";
 ble.advSet1.advParam1.$name                                    = "ti_ble_broadcaster_advertisement_params0";
 ble.advSet1.advData1.$name                                     = "ti_ble_broadcaster_advertisement_data0";
@@ -57,12 +56,12 @@ ble.advSet1.advData1.GAP_ADTYPE_16BIT_MORE                     = true;
 ble.advSet1.advData1.numOfUUIDs16More                          = 1;
 ble.advSet1.advData1.UUID016More                               = 0xFFF0;
 ble.advSet1.advData1.GAP_ADTYPE_PERIPHERAL_CONN_INTERVAL_RANGE = true;
-ble.advSet1.advData1.minConnInterval                           = 60;
-ble.advSet1.advData1.maxConnInterval                           = 80;
+ble.advSet1.advData1.minConnInterval                           = 30;
+ble.advSet1.advData1.maxConnInterval                           = 60;
 ble.advSet1.scanRes1.$name                                     = "ti_ble_broadcaster_advertisement_data1";
 ble.advSet1.scanRes1.GAP_ADTYPE_PERIPHERAL_CONN_INTERVAL_RANGE = true;
-ble.advSet1.scanRes1.minConnInterval                           = 60;
-ble.advSet1.scanRes1.maxConnInterval                           = 80;
+ble.advSet1.scanRes1.minConnInterval                           = 30;
+ble.advSet1.scanRes1.maxConnInterval                           = 60;
 ble.rng.$name                                                  = "CONFIG_RNG_0";
 ble.aesccm.$name                                               = "CONFIG_AESCCM_0";
 ble.ecdh.$name                                                 = "CONFIG_ECDH_0";
@@ -81,11 +80,11 @@ Display1.uart.txPinInstance.$name = "CONFIG_PIN_UART_TX";
 GPIO1.$name              = "CONFIG_GPIO_0";
 GPIO1.mode               = "Output";
 GPIO1.initialOutputState = "High";
-GPIO1.gpioPin.$assign    = "boosterpack.10";
+GPIO1.gpioPin.$assign    = "boosterpack.36";
 
 GPIO2.$name            = "CONFIG_GPIO_INT1";
 GPIO2.interruptTrigger = "Rising Edge";
-GPIO2.gpioPin.$assign  = "boosterpack.25";
+GPIO2.gpioPin.$assign  = "boosterpack.18";
 
 NVS1.$name                    = "CONFIG_NVSINTERNAL";
 NVS1.internalFlash.$name      = "ti_drivers_nvs_NVSLPF30";
@@ -95,8 +94,11 @@ NVS1.internalFlash.regionSize = 0x3000;
 RNG.rngReturnBehavior      = "RNG_RETURN_BEHAVIOR_BLOCKING";
 RNG.noiseConditioningKeyW3 = 0x8D020C32;
 
-SPI1.$name       = "CONFIG_SPI_0";
-SPI1.spi.$assign = "SPI0";
+SPI1.$name               = "CONFIG_SPI_0";
+SPI1.spi.$assign         = "SPI0";
+SPI1.spi.sclkPin.$assign = "boosterpack.9";
+SPI1.spi.pociPin.$assign = "boosterpack.37";
+SPI1.spi.picoPin.$assign = "boosterpack.14";
 
 LED1.$name     = "CONFIG_LED_0";
 LED1.$hardware = system.deviceData.board.components.LED_GREEN;
@@ -112,11 +114,8 @@ Display1.uart.uart.$suggestSolution                  = "UART0";
 Display1.uart.uart.dmaTxChannel.$suggestSolution     = "DMA_CH2";
 Display1.uart.uart.dmaRxChannel.$suggestSolution     = "DMA_CH3";
 Display1.uart.uart.txPin.$suggestSolution            = "boosterpack.4";
-SPI1.spi.sclkPin.$suggestSolution                    = "boosterpack.9";
 SPI1.spi.dmaRxChannel.$suggestSolution               = "DMA_CH1";
 SPI1.spi.dmaTxChannel.$suggestSolution               = "DMA_CH0";
-SPI1.spi.pociPin.$suggestSolution                    = "boosterpack.37";
-SPI1.spi.picoPin.$suggestSolution                    = "boosterpack.17";
 LED1.ledPin.$suggestSolution                         = "boosterpack.40";
 AESCommonXXF3.laes.$suggestSolution                  = "LAES";
 AESCommonXXF3.laes.dataLaesChannelA.$suggestSolution = "DMA_CH4";

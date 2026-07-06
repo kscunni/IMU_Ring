@@ -1,7 +1,7 @@
 #include "icm_func_impl.h"
 #include "imu/inv_imu_defs.h"
 #include "imu/inv_imu_driver.h"
-#include <common/Profiles/simple_gatt/simple_gatt_profile.h>
+
 #include "ti_drivers_config.h"
 #include <FreeRTOS.h>
 #include <app_main.h>
@@ -11,11 +11,12 @@
 #include <ti/drivers/GPIO.h>
 #include <ti/drivers/SPI.h>
 #include <unistd.h>
-
+#include <common/Profiles/simple_gatt/simple_gatt_profile.h>
 static inv_imu_device_t imu_dev;
 inv_imu_sensor_data_t sensor_data;
 static Display_Handle displayHandle;
 static TaskHandle_t imuble_task_handle = NULL;
+// const int32_t gyro_offset[3] = {-5, 1, -1};
 #define TASK_STACK_SIZE 1024
 #define TASK_PRIORITY 1
 
@@ -61,6 +62,8 @@ void init_icm45605(void)
     rc |= inv_imu_set_accel_mode(&imu_dev, PWR_MGMT0_ACCEL_MODE_LN);
     rc |= inv_imu_set_gyro_mode(&imu_dev, PWR_MGMT0_GYRO_MODE_LN);
 
+    // rc |= inv_imu_set_gyro_offset(&imu_dev, gyro_offset);
+
     // set up interrupt on ready
     inv_imu_int_pin_config_t int1_config = {
         .int_polarity = INTX_CONFIG2_INTX_POLARITY_HIGH,
@@ -93,6 +96,7 @@ static void imuble_task(void *pvParameters)
 
     // long last_ticks = xTaskGetTickCount();
     // long ticks = last_ticks;
+
 
     for (;;)
     {

@@ -17,6 +17,7 @@ inv_imu_sensor_data_t sensor_data;
 static Display_Handle displayHandle;
 static TaskHandle_t imuble_task_handle = NULL;
 
+
 #define TASK_STACK_SIZE 1024
 #define TASK_PRIORITY 1
 
@@ -24,6 +25,7 @@ void init_icm45605(void)
 {
     int rc = 0;
     uint8_t whoami;
+    int16_t goffsetx = -46, goffsety = 8, goffsetz = -12;
 
     // SPI
     SPI_Params spiParams;
@@ -62,7 +64,7 @@ void init_icm45605(void)
     rc |= inv_imu_set_accel_mode(&imu_dev, PWR_MGMT0_ACCEL_MODE_LN);
     rc |= inv_imu_set_gyro_mode(&imu_dev, PWR_MGMT0_GYRO_MODE_LN);
 
-    // rc |= inv_imu_set_gyro_offset(&imu_dev, gyro_offset);
+    rc |= inv_imu_set_gyro_offset(&imu_dev, goffsetx, goffsety, goffsetz);
 
     // set up interrupt on ready
     inv_imu_int_pin_config_t int1_config = {

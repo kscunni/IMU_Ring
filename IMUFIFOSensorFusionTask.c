@@ -17,13 +17,14 @@
 #include "sensorfusion.h"
 
 static inv_imu_device_t imu_dev;
+uint8_t buffer[210];
 uint8_t ble_payload[210];
 static Display_Handle displayHandle;
 static TaskHandle_t imuble_task_handle = NULL;
 
 int16_t goffsetx = -46, goffsety = 8, goffsetz = -12;
 
-#define TASK_STACK_SIZE 1024
+#define TASK_STACK_SIZE 2048
 #define TASK_PRIORITY 1
 
 #define NUM_FIFO_SAMPLES 5
@@ -117,7 +118,7 @@ void ble_helper(char *Data)
 
 static void imuble_task(void *pvParameters)
 {
-
+    static data_sample_t data;
     // for temporary serial prints for debug
     Display_init();
     displayHandle = Display_open(Display_Type_UART, NULL);
@@ -149,7 +150,7 @@ static void imuble_task(void *pvParameters)
             
             rc |= inv_imu_get_fifo_frame(&imu_dev, &d);
 
-            data_sample_t data = {
+            data = (data_sample_t){
                 .raw_accel[0] = d.byte_16.accel_data[0],
                 .raw_accel[1] = d.byte_16.accel_data[1],
                 .raw_accel[2] = d.byte_16.accel_data[2],
@@ -167,7 +168,7 @@ static void imuble_task(void *pvParameters)
                 // Create a 12-byte payload struct mapping precisely to what
                 // BLE needs 6 x 16-bit values (Accel X/Y/Z, Gyro X/Y/Z) =
                 // 12 bytes
-                memcpy(&ble_payload[42*i], &data, 42);
+                memcpy(&buffer[42*i], &data, 42);
                 // ble_payload[6*i+0] = d.byte_16.accel_data[0];
                 // ble_payload[6*i+1] = d.byte_16.accel_data[1];
                 // ble_payload[6*i+2] = d.byte_16.accel_data[2];
@@ -183,8 +184,8 @@ static void imuble_task(void *pvParameters)
         // turned on
         if (rc == 0)
         {
-            BLEAppUtil_invokeFunction(ble_helper,
-                                        (char *)ble_payload);
+            memcpy(&ble_payload, &buffer, 210);
+            BLEAppUtil_invokeFunction(ble_helper, (char *)ble_payload);
         }
         // }
     }
