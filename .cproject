@@ -254,7 +254,7 @@
                         </tool>
                     </fileInfo>
                     <sourceEntries>
-                        <entry excluding="IMUFIFOSensorFusionTask.c|LowRateIMUBLE.c|test_IMUBLE_task.c|APEX_imuble_task2.c|APEX_imuble_task.c|ICMDriver/icm45605|ICMDriver/examples" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+                        <entry excluding="Fusion|sensorfusion.c|IMUFIFOSensorFusionTask.c|LowRateIMUBLE.c|test_IMUBLE_task.c|APEX_imuble_task2.c|APEX_imuble_task.c|ICMDriver/icm45605|ICMDriver/examples" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
                     </sourceEntries>
                 </configuration>
             </storageModule>
