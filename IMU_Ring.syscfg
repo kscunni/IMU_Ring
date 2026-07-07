@@ -25,6 +25,8 @@ const RCL      = scripting.addModule("/ti/drivers/RCL");
 const RNG      = scripting.addModule("/ti/drivers/RNG");
 const SPI      = scripting.addModule("/ti/drivers/SPI", {}, false);
 const SPI1     = SPI.addInstance();
+const Button   = scripting.addModule("/ti/drivers/apps/Button", {}, false);
+const Button1  = Button.addInstance();
 const LED      = scripting.addModule("/ti/drivers/apps/LED", {}, false);
 const LED1     = LED.addInstance();
 const Settings = scripting.addModule("/ti/posix/freertos/Settings");
@@ -100,6 +102,9 @@ SPI1.spi.sclkPin.$assign = "boosterpack.9";
 SPI1.spi.pociPin.$assign = "boosterpack.37";
 SPI1.spi.picoPin.$assign = "boosterpack.14";
 
+Button1.$name     = "CONFIG_BUTTON_0";
+Button1.$hardware = system.deviceData.board.components["BTN-1"];
+
 LED1.$name     = "CONFIG_LED_0";
 LED1.$hardware = system.deviceData.board.components.LED_GREEN;
 
@@ -116,6 +121,7 @@ Display1.uart.uart.dmaRxChannel.$suggestSolution     = "DMA_CH3";
 Display1.uart.uart.txPin.$suggestSolution            = "boosterpack.4";
 SPI1.spi.dmaRxChannel.$suggestSolution               = "DMA_CH1";
 SPI1.spi.dmaTxChannel.$suggestSolution               = "DMA_CH0";
+Button1.button.$suggestSolution                      = "boosterpack.13";
 LED1.ledPin.$suggestSolution                         = "boosterpack.40";
 AESCommonXXF3.laes.$suggestSolution                  = "LAES";
 AESCommonXXF3.laes.dataLaesChannelA.$suggestSolution = "DMA_CH4";

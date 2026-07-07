@@ -72,6 +72,8 @@ icall_userCfg_t user0Cfg = BLE_USER_CFG;
 #include "ti/ble/profiles/oad/ms_oad_profile.h"
 #endif
 
+#include <ti/drivers/power/PowerCC23X0.h>
+#include "tasks.h"
 
 /*******************************************************************************
  * MACROS
@@ -126,6 +128,14 @@ int main()
   user0Cfg.appServiceInfo->timerTickPeriod = ICall_getTickPeriod();
   user0Cfg.appServiceInfo->timerMaxMillisecond  = ICall_getMaxMSecs();
 
+  /* Check if we just woke up from a button press (Shutdown Mode) */
+    PowerLPF3_ResetReason resetReason = PowerLPF3_getResetReason();
+    if (resetReason == PowerLPF3_RESET_SHUTDOWN_IO) {
+        
+        /* Unfreeze the pins so the GPIO driver can take control again */
+        PowerLPF3_releaseLatches();
+    }
+
   /* Initialize all applications tasks */
 #if defined(MS_OAD)
   if (MSOAD_InitIfRequired() == false)
@@ -138,6 +148,9 @@ int main()
   appMain();
 #endif
 
+    create_imuble_task();
+    buttonTask_create();
+    
   /* Start the FreeRTOS scheduler */
   vTaskStartScheduler();
 
