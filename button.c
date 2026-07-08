@@ -40,6 +40,8 @@ typedef enum {
 
 volatile ButtonEvent_t pendingButtonEvent = EVENT_NONE;
 
+extern volatile int8_t event_marker;
+
 // ============================================================================
 // Function Prototypes
 // ============================================================================
@@ -65,6 +67,7 @@ void shortPressHandler(void) {
     // Modify global variable or execute quick logic
     // systemModeActive = !systemModeActive;
     GPIO_toggle(CONFIG_LED_0_GPIO);
+    event_marker = -1;
 }
 
 // ============================================================================

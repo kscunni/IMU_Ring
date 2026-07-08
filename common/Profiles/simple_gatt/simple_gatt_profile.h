@@ -82,7 +82,7 @@ extern "C"
 
 // Length of Characteristic 5 in bytes
 #define SIMPLEGATTPROFILE_CHAR5_LEN           5
-#define SIMPLEGATTPROFILE_CHAR4_LEN           96
+#define SIMPLEGATTPROFILE_CHAR4_LEN           113
 
 /*********************************************************************
  * TYPEDEFS

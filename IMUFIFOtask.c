@@ -15,11 +15,13 @@
 #include <unistd.h>
 
 static inv_imu_device_t imu_dev;
-int16_t ble_payload[48];
+int16_t ble_payload[57];
 static Display_Handle displayHandle;
 static TaskHandle_t imuble_task_handle = NULL;
 
 int16_t goffsetx = -46, goffsety = 8, goffsetz = -12;
+
+volatile int8_t event_marker;
 
 #define TASK_STACK_SIZE 1024
 #define TASK_PRIORITY 1
@@ -108,7 +110,7 @@ void ble_helper(char *Data)
 {
     // setting this parameter causes a "notify" (Sending 12 bytes: 3 Accel + 3
     // Gyro)
-    SimpleGattProfile_setParameter(SIMPLEGATTPROFILE_CHAR4, 96, Data);
+    SimpleGattProfile_setParameter(SIMPLEGATTPROFILE_CHAR4, SIMPLEGATTPROFILE_CHAR4_LEN, Data);
 }
 
 static void imuble_task(void *pvParameters)
@@ -133,8 +135,8 @@ static void imuble_task(void *pvParameters)
         if (rc == 0 && int_status.INV_FIFO_THS)
         {
 
-            uint16_t frame_count = 0;
-            rc |= inv_imu_get_frame_count(&imu_dev, &frame_count);
+            // uint16_t frame_count = 0;
+            // rc |= inv_imu_get_frame_count(&imu_dev, &frame_count);
 
             // Loop through all currently available frames in the FIFO
             for (uint16_t i = 0; i < 8; i++)
@@ -148,17 +150,19 @@ static void imuble_task(void *pvParameters)
                     // BLE needs 6 x 16-bit values (Accel X/Y/Z, Gyro X/Y/Z) =
                     // 12 bytes
                     
-                    ble_payload[6*i+0] = d.byte_16.accel_data[0];
-                    ble_payload[6*i+1] = d.byte_16.accel_data[1];
-                    ble_payload[6*i+2] = d.byte_16.accel_data[2];
-                    ble_payload[6*i+3] = d.byte_16.gyro_data[0];
-                    ble_payload[6*i+4] = d.byte_16.gyro_data[1];
-                    ble_payload[6*i+5] = d.byte_16.gyro_data[2];
+                    ble_payload[7*i+0] = d.byte_16.accel_data[0];
+                    ble_payload[7*i+1] = d.byte_16.accel_data[1];
+                    ble_payload[7*i+2] = d.byte_16.accel_data[2];
+                    ble_payload[7*i+3] = d.byte_16.gyro_data[0];
+                    ble_payload[7*i+4] = d.byte_16.gyro_data[1];
+                    ble_payload[7*i+5] = d.byte_16.gyro_data[2];
+                    ble_payload[7*i+6] = d.byte_16.timestamp;
 
                     
                 }
-                
             }
+            ble_payload[56] = event_marker; // little endian, so this is correct.
+            event_marker = 0;
             // Discard dummy startup values that occur when IMU is just
             // turned on
             if (ble_payload[0] != INVALID_VALUE_FIFO)
