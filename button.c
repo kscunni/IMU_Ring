@@ -12,6 +12,12 @@
 
 /* Board Header (Replace with your actual SysConfig generated header if different) */
 #include "ti_drivers_config.h" 
+#include <FreeRTOS.h>
+#include <task.h>
+
+
+#define IMU_EVENT_SHUTDOWN    (1 << 1)  // Bit 1: Command from control task
+#define CTRL_EVENT_IMU_SHUTDOWN_ACK  (1 << 0)
 
 // ============================================================================
 // Global Variables & State
@@ -22,6 +28,9 @@ ClockP_Struct debounceClockStruct;
 ClockP_Struct holdClockStruct;
 SemaphoreP_Struct buttonSemStruct;
 SemaphoreP_Handle buttonSemHandle;
+
+extern TaskHandle_t imuble_task_handle;
+TaskHandle_t button_task_handle = NULL;
 
 /* State Tracking */
 uint32_t pressTime = 0;
@@ -51,8 +60,10 @@ void gpioButtonFxn(uint_least8_t index);
 void debounceCallback(uintptr_t arg);
 void holdCallback(uintptr_t arg);
 void initButtonLogic(void);
-void *buttonAppTask(void *arg0);
+void buttonAppTask(void *arg0);
 void buttonTask_create(void);
+
+
 
 // ============================================================================
 // Hardware / Application Handlers
@@ -61,6 +72,19 @@ void buttonTask_create(void);
 void powerOffSensors(void) {
     // TODO: Send I2C/SPI sleep commands or toggle a load switch to cut sensor power.
     // Because this runs in a Task context, blocking TI drivers are 100% safe here.
+    xTaskNotify(imuble_task_handle, IMU_EVENT_SHUTDOWN, eSetBits);
+
+    uint32_t notifiedValue;
+
+    // 2. Wait for the IMU to finish
+            xTaskNotifyWait(
+                0x00, 
+                0xFFFFFFFF, 
+                &notifiedValue, 
+                pdMS_TO_TICKS( 20 ) // Blocks here until the ACK arrives
+            );
+        
+    
 }
 
 void shortPressHandler(void) {
@@ -196,7 +220,7 @@ void initButtonLogic(void) {
 }
 
 // The core infinite loop for this thread
-void *buttonAppTask(void *arg0) {
+void buttonAppTask(void *arg0) {
     
     initButtonLogic();
 
@@ -222,22 +246,26 @@ void *buttonAppTask(void *arg0) {
         }
     }
     
-    return NULL;
 }
 
-// Call this from your main() file to spawn the task
 void buttonTask_create(void) {
-    pthread_t thread;
-    pthread_attr_t attrs;
-    struct sched_param priParam;
+    BaseType_t xReturned;
 
-    pthread_attr_init(&attrs);
-    
-    // Set priority lower than the BLE stack
-    priParam.sched_priority = 2; 
-    pthread_attr_setschedparam(&attrs, &priParam);
-    pthread_attr_setdetachstate(&attrs, PTHREAD_CREATE_DETACHED);
-    pthread_attr_setstacksize(&attrs, 1024); // 1KB stack
+    // 1024 Bytes / 4 bytes per word = 256 Words
+    const configSTACK_DEPTH_TYPE stackSizeWords = 1024 / sizeof(StackType_t);
 
-    pthread_create(&thread, &attrs, buttonAppTask, NULL);
+    xReturned = xTaskCreate(
+        buttonAppTask,             /* Function that implements the task. */
+        "Button_Task",             /* Text name for the task. */
+        stackSizeWords,            /* Stack size in words (not bytes!). */
+        NULL,                      /* Parameter passed into the task. */
+        2,                         /* Priority at which the task is created. */
+        &button_task_handle                       /* Used to pass out the created task's handle. (NULL if not needed) */
+    );
+
+    if (xReturned != pdPASS) {
+        // Task creation failed (usually due to insufficient FreeRTOS heap memory).
+        // Trap the MCU here during debugging.
+        while (1); 
+    }
 }
