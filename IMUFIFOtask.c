@@ -153,8 +153,8 @@ static void imuble_task(void *pvParameters)
 {
 
     // for temporary serial prints for debug
-    Display_init();
-    displayHandle = Display_open(Display_Type_UART, NULL);
+    // Display_init();
+    // displayHandle = Display_open(Display_Type_UART, NULL);
     SPI_init();
 
     init_icm45605();

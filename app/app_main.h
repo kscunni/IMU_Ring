@@ -461,4 +461,27 @@ uint16_t Connection_getConnhandle(uint8_t index);
  */
 uint16_t Connection_getConnIndex(uint16_t connHandle);
 
+// SECURITY BEGIN
+
+#include <FreeRTOS.h>
+#include <task.h>
+
+// IMU Task Notification Bits
+#define IMU_EVENT_DATA_READY         (1 << 0) // Bit 0: Hardware interrupt from IMU
+#define IMU_EVENT_SHUTDOWN           (1 << 1) // Bit 1: Command from control task
+#define IMU_EVENT_START_PASSKEY      (1 << 2) // Bit 2: BLE stack requested passkey entry
+#define IMU_EVENT_CANCEL_PASSKEY     (1 << 3) // Bit 3: BLE pairing finished or timed out
+
+#define CTRL_EVENT_IMU_SHUTDOWN_ACK  (1 << 0)
+
+extern TaskHandle_t imuble_task_handle;
+extern TaskHandle_t button_task_handle;
+extern uint16_t activeConnHandle;
+extern volatile uint32_t completed_passkey;
+
+
+void ProcessPasscode_invokeFromFWContext(char *pData);
+
+// SECURITY END
+
 #endif /* APP_MAIN_H_ */

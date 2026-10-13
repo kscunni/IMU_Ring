@@ -96,14 +96,40 @@ BLEAppUtil_EventHandler_t PairingPairStateHandler =
  *
  * @return  none
  */
+
+// SECURITY BEGIN
+extern void App_handleUARTPasscodeEvent(void);
+extern uint16_t activeConnHandle;
+
+extern bool requestPasscodeUART; // Create this global flag
+// SECURITY END
+
+// void Pairing_passcodeHandler(uint32 event, BLEAppUtil_msgHdr_t *pMsgData)
+// {
+//     BLEAppUtil_PasscodeData_t *pData = (BLEAppUtil_PasscodeData_t *)pMsgData;
+
+//     // Save the connection handle to the global variable you created earlier
+//     activeConnHandle = pData->connHandle;
+
+//     // Call your UART function to prompt the user and read the terminal
+//     App_handleUARTPasscodeEvent();
+// }
+
+// SECURITY BEGIN
 void Pairing_passcodeHandler(uint32 event, BLEAppUtil_msgHdr_t *pMsgData)
 {
     BLEAppUtil_PasscodeData_t *pData = (BLEAppUtil_PasscodeData_t *)pMsgData;
 
-    // Send passcode response
-    GAPBondMgr_PasscodeRsp(pData->connHandle, SUCCESS, B_APP_DEFAULT_PASSCODE);
-}
+    // Save the connection handle for GAPBondMgr_PasscodeRsp
+    activeConnHandle = pData->connHandle;
 
+    // Notify the IMU task to switch to gesture passkey entry mode
+    if (imuble_task_handle != NULL)
+    {
+        xTaskNotify(imuble_task_handle, IMU_EVENT_START_PASSKEY, eSetBits);
+    }
+}
+// SECURITY END
 /*********************************************************************
  * @fn      Pairing_pairStateHandler
  *
@@ -132,6 +158,12 @@ void Pairing_pairStateHandler(uint32 event, BLEAppUtil_msgHdr_t *pMsgData)
         }
         case BLEAPPUTIL_PAIRING_STATE_COMPLETE:
         {
+            // SECURITY BEGIN
+            if (imuble_task_handle != NULL)
+            {
+                xTaskNotify(imuble_task_handle, IMU_EVENT_CANCEL_PASSKEY, eSetBits);
+            }
+            // SECURITY END
             MenuModule_printf(APP_MENU_PAIRING_EVENT, 0, "Pairing Status: Complete - "
                               "connectionHandle = "MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET
                               "status = "MENU_MODULE_COLOR_YELLOW "%d " MENU_MODULE_COLOR_RESET,

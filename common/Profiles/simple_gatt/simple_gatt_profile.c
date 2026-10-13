@@ -204,7 +204,9 @@ static gattAttribute_t simpleGattProfile_attrTbl[] =
    // Characteristic Value 4
    GATT_BT_ATT( simpleGattProfile_char4UUID,  0,                                     simpleGattProfile_Char4 ),
    // Characteristic 4 configuration
-   GATT_BT_ATT( clientCharCfgUUID,            GATT_PERMIT_READ | GATT_PERMIT_WRITE,  (uint8 *) &simpleGattProfile_Char4Config ),
+   // SECURITY BEGIN
+   GATT_BT_ATT( clientCharCfgUUID,            GATT_PERMIT_AUTHEN_READ | GATT_PERMIT_AUTHEN_WRITE,  (uint8 *) &simpleGattProfile_Char4Config ),
+   // SECURITY END
    // Characteristic 4 User Description
    GATT_BT_ATT( charUserDescUUID,             GATT_PERMIT_READ,                      simpleGattProfile_Char4UserDesp ),
 

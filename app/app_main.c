@@ -101,6 +101,79 @@ BLEAppUtil_PeriCentParams_t appMainPeriCentParams;
 //! Functions
 //*****************************************************************************
 
+// SECURITY BEGIN
+
+#include <ti/drivers/UART2.h>
+#include <stdlib.h> // For atoi()
+#include <ti_drivers_config.h>
+
+UART2_Handle uartHandle;
+uint16_t activeConnHandle = 0;
+
+// Holds a single digit (0-9) received over UART, or -1 when empty
+volatile int8_t uart_digit_buffer = -1;
+static char rxChar;
+
+void App_uartRxCallback(UART2_Handle handle, void *buffer, size_t count, void *userArg, int_fast16_t status);
+
+void App_initUART(void)
+{
+    UART2_Params uartParams;
+    UART2_Params_init(&uartParams);
+    uartParams.baudRate = 115200;
+    uartParams.readMode = UART2_Mode_CALLBACK;
+    uartParams.readCallback = App_uartRxCallback;
+
+    uartHandle = UART2_open(CONFIG_UART2_0, &uartParams);
+
+    // Start listening for single characters immediately
+    if (uartHandle != NULL)
+    {
+        UART2_read(uartHandle, &rxChar, 1, NULL);
+    }
+}
+
+void App_uartRxCallback(UART2_Handle handle, void *buffer, size_t count, void *userArg, int_fast16_t status)
+{
+    if (status == UART2_STATUS_SUCCESS && count == 1)
+    {
+        char c = *(char *)buffer;
+
+        // Only accept valid numeric digits (0-9) if previous digit was consumed
+        if (c >= '0' && c <= '9' && uart_digit_buffer == -1)
+        {
+            uart_digit_buffer = (int8_t)(c - '0');
+        }
+    }
+
+    // Always re-arm the 1-byte read so UART never goes deaf
+    UART2_read(handle, &rxChar, 1, NULL);
+}
+
+// Executes inside BLEAppUtil Task Context after all 6 digits are collected
+void ProcessPasscode_invokeFromFWContext(char *pData)
+{
+    (void)pData; // Always NULL when using BLEAppUtil_invokeFunctionNoData
+    uint32_t passcode = completed_passkey;
+
+    if (uartHandle != NULL)
+    {
+        // char msg[64];
+        // size_t bytesWritten;
+        // int len = snprintf(msg, sizeof(msg),
+        //                    "\r\nPasskey accepted! Submitting 6-digit code: %06u\r\n",
+        //                    (unsigned int)passcode);
+        // if (len > 0)
+        // {
+        //     UART2_write(uartHandle, msg, (size_t)len, &bytesWritten);
+        // }
+    }
+
+    GAPBondMgr_PasscodeRsp(activeConnHandle, SUCCESS, passcode);
+}
+
+// SECURITY END
+
 /*********************************************************************
  * @fn      criticalErrorHandler
  *
@@ -255,6 +328,9 @@ void App_StackInitDoneHandler(gapDeviceInitDoneEvent_t *deviceInitDoneData)
  */
 void appMain(void)
 {
+
+    App_initUART();
+
     // Call the BLEAppUtil module init function
     BLEAppUtil_init(&criticalErrorHandler, &App_StackInitDoneHandler,
                     &appMainParams, &appMainPeriCentParams);
